@@ -7,5 +7,5 @@ import { HomeModule } from '../home.module';
   styleUrl: './home-view.component.css'
 })
 export class HomeViewComponent {
-
+  height: number = 50;
 }
