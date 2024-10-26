@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+.navigation-container{
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+hr {
+    width: 90vh;
+    border-width: 2px;  
+    color: rgb(0, 0, 0);
+    align-self: center;
+}
+
+
+.material-symbols-outlined {
+    justify-self: flex-end;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+
+
+.custom-toolbar a {
+    color:black; 
+    margin: 0 10px; 
+    font-weight: normal;
+    font-size: large;
+}
+
+#userIcon {
+    position: absolute;
+    right: 30px;
+    font-size: 30px;
+}

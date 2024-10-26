@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HomeModule } from '../home.module';
-import { Profile } from './profile.model';
+import { Profile } from '../../models/profile.model';
 
 @Component({
   selector: 'app-home-view',
