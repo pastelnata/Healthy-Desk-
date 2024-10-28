@@ -59,4 +59,10 @@ export class HomeViewComponent {
   removeProfile(index: number) {
     this.profiles.splice(index, 1);
   }
+
+  isAccountMenuVisible: boolean = false;
+  
+  toggleAccountVisibility() {
+    this.isAccountMenuVisible = !this.isAccountMenuVisible;
+  }
 }

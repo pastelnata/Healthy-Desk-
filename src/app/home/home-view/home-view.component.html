@@ -1,4 +1,4 @@
-<app-navigation-view></app-navigation-view>
+<app-navigation-view (toggleAccountVisibility)="toggleAccountVisibility()"></app-navigation-view>
 <body>
     <h2>Your Profiles</h2>
     <section id="profiles-section">
@@ -42,5 +42,7 @@
                 </div>
             </div>
         </div>
+        <!--User popup module-->
+        <app-account-popup-view *ngIf="isAccountMenuVisible" (close)="toggleAccountVisibility()"></app-account-popup-view>
     </section>
 </body>
