@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NavigationModule } from '../navigation.module';
 
 @Component({
@@ -7,5 +7,11 @@ import { NavigationModule } from '../navigation.module';
   styleUrl: './navigation-view.component.css'
 })
 export class NavigationViewComponent {
+
+  @Output() toggleAccountVisibility = new EventEmitter<void>();
+
+  accountClicked() {
+    this.toggleAccountVisibility.emit();
+  }
 
 }
