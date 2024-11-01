@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnalyticsViewComponent } from './analytics-view/analytics-view.component';
+import { ScoreViewComponent } from './score-view/score-view.component';
 import { NavigationModule } from '../navigation/navigation.module';
+
 
 @NgModule({
   declarations: [
-    AnalyticsViewComponent,
+    ScoreViewComponent
   ],
   imports: [
     CommonModule,
     NavigationModule
   ]
 })
-export class AnalyticsModule { }
+export class ScoreModule { }
