@@ -8,12 +8,17 @@ import { Profile } from '../../models/profile.model';
   styleUrl: './home-view.component.css'
 })
 export class HomeViewComponent {
-  height: number = 50;
+  height: number = 68;
   profileTitle: string = '';
   hours: number = 0;
   minutes: number = 0;
+  defaultHeight: number = 0;
+  defaultHours: number = 0;
+  defaultMinutes: number = 0;
 
-  profiles: Profile[] = [];
+  profiles: Profile[] = [
+    { title: 'Default Profile', height: this.defaultHeight, time: `${this.defaultHours}h ${this.defaultMinutes}m` },
+  ];
 
   validateHours() {
     if (this.hours > 23) {
