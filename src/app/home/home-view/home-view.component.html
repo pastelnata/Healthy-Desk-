@@ -1,5 +1,12 @@
 <body>
     <h2>Your Profiles</h2>
+    <section id="arrows">
+        <div id="adjust-arrows">
+            <button class="arrow" id="increase-height" (click)="increaseHeight()">▲</button>
+            <span id="current-height">{{ deskHeight }} cm</span>
+            <button class="arrow" id="decrease-height" (click)="decreaseHeight()">▼</button>
+        </div>
+    </section>
     <section id="profiles-section">
         <div>
             <h5>Create New Profile</h5>
