@@ -7,6 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { LoginViewComponent } from './login/login-view/login-view.component';
 import { HomeModule } from './home/home.module';
 import { FormsModule } from '@angular/forms';
+import { AccountPopupModule } from './account-popup/account-popup.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { FormsModule } from '@angular/forms';
     NavigationModule,
     HomeModule,
     FormsModule,
+    AccountPopupModule,
   ],
   providers: [
     provideAnimationsAsync()
