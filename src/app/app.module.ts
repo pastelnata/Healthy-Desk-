@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { AccountPopupModule } from './account-popup/account-popup.module';
 import { StreakPopupModule } from './streak-popup/streak-popup.module';
 import { RegisterComponent } from './register/register-view/register.component';
+import { HttpClientModule } from '@angular/common/http';
+import { DeskConnectModule } from './desk-connect/desk-connect.module';
 
 
 @NgModule({
@@ -21,11 +23,13 @@ import { RegisterComponent } from './register/register-view/register.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     NavigationModule,
     HomeModule,
     FormsModule,
     AccountPopupModule,
-    StreakPopupModule
+    StreakPopupModule,
+    DeskConnectModule
   ],
   providers: [
     provideAnimationsAsync()
