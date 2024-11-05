@@ -8,9 +8,11 @@ import { LoginViewComponent } from './login/login-view/login-view.component';
 import { HomeModule } from './home/home.module';
 import { FormsModule } from '@angular/forms';
 import { AccountPopupModule } from './account-popup/account-popup.module';
+import { StreakPopupModule } from './streak-popup/streak-popup.module';
 import { RegisterComponent } from './register/register-view/register.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DeskConnectModule } from './desk-connect/desk-connect.module';
+
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { DeskConnectModule } from './desk-connect/desk-connect.module';
     HomeModule,
     FormsModule,
     AccountPopupModule,
+    StreakPopupModule,
     DeskConnectModule
   ],
   providers: [
