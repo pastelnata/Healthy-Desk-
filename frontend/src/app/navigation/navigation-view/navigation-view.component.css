@@ -1,0 +1,91 @@
+
+.header-title {
+    position: absolute;
+    left:30px;
+    font-size: 40px;
+    cursor: pointer;
+    color: var(--lightBlue);
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.13);
+    margin: 0;
+  
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+.navigation-container{
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    background-color: rgba(220, 251, 242, 0.1);
+}
+
+hr {
+    width: 90vh;
+    border-width: 3px;  
+    color:var(--textColor);
+    align-self: center;
+}
+
+.material-symbols-outlined {
+    justify-self: flex-end;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+
+
+.custom-toolbar a {
+    color:var(--textColor); 
+    margin: 0 10px; 
+    font-weight: 400;
+    font-size: 25px;
+    background-image: none;
+    background-color: transparent;
+}
+
+.profileSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    right: 30px;
+}
+
+.border {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 10px solid var(--darkBlue);
+    padding: 5px;
+    cursor: pointer;
+}
+
+
+#userIcon {
+    right: 30px;
+    font-size: 40px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+#numberStreak {
+    font-size: 40px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--darkBlue);
+
+}
+#streakIcon {
+    color: orange;
+    stroke: red;
+    font-size: 40px;
+}
+
+
