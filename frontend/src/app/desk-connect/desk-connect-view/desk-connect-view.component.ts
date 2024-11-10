@@ -7,14 +7,11 @@ import { Desk } from '../../models/DeskModel';
   templateUrl: './desk-connect-view.component.html',
   styleUrl: './desk-connect-view.component.css'
 })
-export class DeskConnectViewComponent implements OnInit{
+export class DeskConnectViewComponent {
   desks: string[] = [];
 
   constructor(private deskApiService: DeskApiService) {}
 
-  ngOnInit(): void {
-    this.loadDesks();
-  }
   
   loadDesks(): void {
     this.deskApiService.getDesks().subscribe({
