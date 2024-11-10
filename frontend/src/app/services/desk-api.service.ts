@@ -1,22 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Desk {
-  id: string;
-  name: string;
-  manufacturer: string;
-  position: number;
-  speed: number;
-  status: string;
-}
-
+import { Desk } from '../models/DeskModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeskApiService {
-  private apiUrl = 'http://localhost:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
+  private apiUrl = 'http://localhost:3000/api/desks'
 
   constructor(private http: HttpClient) { }
 
