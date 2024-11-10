@@ -1,19 +1,29 @@
-import { Component } from '@angular/core';
-import { Desk, DeskApiService } from '../../services/desk-api.service';
+import { Component, OnInit } from '@angular/core';
+import { DeskApiService } from '../../services/desk-api.service';
+import { Desk } from '../../models/DeskModel';
 
 @Component({
   selector: 'app-desk-connect-view',
   templateUrl: './desk-connect-view.component.html',
   styleUrl: './desk-connect-view.component.css'
 })
-export class DeskConnectViewComponent {
+export class DeskConnectViewComponent implements OnInit{
   desks: string[] = [];
 
   constructor(private deskApiService: DeskApiService) {}
+
+  ngOnInit(): void {
+    this.loadDesks();
+  }
   
-  loadDesks() {
-    this.deskApiService.getDesks().subscribe( data => {
+  loadDesks(): void {
+    this.deskApiService.getDesks().subscribe({
+      next: (data) => {
         this.desks = data;
+      },
+      error: (error) => {
+        console.error('Error loading desks', error);
+      }
     });
   }
 
