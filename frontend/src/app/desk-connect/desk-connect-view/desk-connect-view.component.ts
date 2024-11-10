@@ -9,26 +9,28 @@ import { Desk } from '../../models/DeskModel';
 })
 export class DeskConnectViewComponent {
   desks: string[] = [];
+  deskIds: string[] = [];
+  desksInfos: Desk[] = [];
+  isLoading: boolean = false;
 
   constructor(private deskApiService: DeskApiService) {}
 
-  
-  loadDesks(): void {
-    this.deskApiService.getDesks().subscribe({
-      next: (data) => {
-        this.desks = data;
-      },
-      error: (error) => {
-        console.error('Error loading desks', error);
-      }
+  loadDesksAndInfos() {
+    this.deskIds = [];
+    this.desksInfos = [];
+    this.isLoading = true;
+
+    // Gets all desk ID's
+    this.deskApiService.getDesks().subscribe(ids => {
+      this.deskIds = ids;
+
+      //For each ID it got, gets details about the desk and adds them to desksInfos array
+      this.deskIds.forEach(id => {
+        this.deskApiService.getDeskInfo(id).subscribe(deskData => {
+          this.desksInfos.push(deskData);
+        });
+      });
+      this.isLoading = false;
     });
-  }
-
-  deskInfo: Desk | null=null;
-
-  loadDeskDetails(id: string) {
-    this.deskApiService.getDeskInfo(id).subscribe ( data => {
-      this.deskInfo = data;
-    })
   }
 }
