@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Desk {
@@ -20,7 +20,7 @@ export class DeskApiService {
 
   private apiUrl = 'http://localhost:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getDesks(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrl)
@@ -31,20 +31,44 @@ export class DeskApiService {
     return this.http.get<Desk>(deskUrl);
   }
 
-  updateDeskPosition(deskInfo: Desk, position: number): Observable<Desk> {
-    const deskUrl = `${this.apiUrl}/${this.conectedDeskId}`;
-    return this.http.put<Desk>(deskUrl, deskInfo.position);
+  updateDeskPosition(position: number): Observable<any> {
+    // const url = `http://127.0.0.1:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks/cd:fb:1a:53:fb:e6`;
+    if(this.conectedDeskId === '') {
+      alert("No desk connected");
+    }
+    this.getConectedDeskId();
+    const conectedDeskUrl = `${this.apiUrl}/${this.conectedDeskId}`;
+    
+    const body = { position };
+  
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+  
+    return this.http.put<any>(conectedDeskUrl, body, { headers });
   }
+  
+  
   updateDeskID(deskId: string) {
-    this.conectedDeskId = deskId;
+  
   }
 
   getConectedDeskId() {
+    console.log(this.conectedDeskId);
     return this.conectedDeskId;
   }
 
   connectToDesk(id: string) {
     this.conectedDeskId = id;
     alert("connected to desk with id: " + this.conectedDeskId);
+    // this.saveToLocalStorage(this.conectedDeskId);
   }
+
+  // saveToLocalStorage(id: string){
+  //   localStorage.setItem('deskId', id);
+  // }
+
+  // loadfROmLocalStorage(){
+  //   return localStorage.getItem('deskId');
+  // }
 }
