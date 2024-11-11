@@ -16,6 +16,8 @@ export interface Desk {
   providedIn: 'root'
 })
 export class DeskApiService {
+  private conectedDeskId: string = '';
+
   private apiUrl = 'http://localhost:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
 
   constructor(private http: HttpClient) { }
@@ -27,5 +29,22 @@ export class DeskApiService {
   getDeskInfo(deskId: string): Observable<Desk> {
     const deskUrl = `${this.apiUrl}/${deskId}`;
     return this.http.get<Desk>(deskUrl);
+  }
+
+  updateDeskPosition(deskInfo: Desk, position: number): Observable<Desk> {
+    const deskUrl = `${this.apiUrl}/${this.conectedDeskId}`;
+    return this.http.put<Desk>(deskUrl, deskInfo.position);
+  }
+  updateDeskID(deskId: string) {
+    this.conectedDeskId = deskId;
+  }
+
+  getConectedDeskId() {
+    return this.conectedDeskId;
+  }
+
+  connectToDesk(id: string) {
+    this.conectedDeskId = id;
+    alert("connected to desk with id: " + this.conectedDeskId);
   }
 }

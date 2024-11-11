@@ -10,13 +10,14 @@ export class DeskConnectViewComponent {
   deskIds: string[] = [];
   desksInfos: Desk[] = [];
   isLoading: boolean = false;
-
+  
   constructor(private deskApiService: DeskApiService) {}
   
   loadDesksAndInfos() {
     this.deskIds = [];
     this.desksInfos = [];
     this.isLoading = true;
+
 
     // Gets all desk ID's
     this.deskApiService.getDesks().subscribe(ids => {
@@ -30,5 +31,9 @@ export class DeskConnectViewComponent {
       });
       this.isLoading = false;
     });
+  }
+
+  connectToDesk(id: string) {
+    this.deskApiService.connectToDesk(id);
   }
 }
