@@ -32,12 +32,13 @@ export class DeskApiService {
   }
 
   updateDeskPosition(position: number): Observable<any> {
-    // const url = `http://127.0.0.1:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks/cd:fb:1a:53:fb:e6`;
-    if(this.conectedDeskId === '') {
-      alert("No desk connected");
-    }
+    const conectedDeskUrl = `http://127.0.0.1:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks/cd:fb:1a:53:fb:e6`;
+   
+    // if(this.conectedDeskId === '') {
+    //   alert("No desk connected");
+    // }
     this.getConectedDeskId();
-    const conectedDeskUrl = `${this.apiUrl}/${this.conectedDeskId}`;
+    // const conectedDeskUrl = `${this.apiUrl}/${this.conectedDeskId}`;
     
     const body = { position };
   
