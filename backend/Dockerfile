@@ -3,9 +3,13 @@ FROM node:18
 # Navigate to directory
 WORKDIR /backend
 
-# Install dependancies
+# Install dependancies for python
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+# Install dependencies for node
 RUN npm install dotenv
 RUN npm install -g typescript
+RUN npm install sequelize --save
 RUN npm install @types/dotenv --save-dev
 COPY package*.json ./
 RUN npm install
@@ -16,10 +20,8 @@ COPY . .
 # 5. Compile
 RUN npm run build
 
-# wait for the database to be ready
-
 # 6. Application port
-EXPOSE 3000
+EXPOSE 8000
 
 # 7. Start the server
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npm start & python3 src/config/desk-api.py"]

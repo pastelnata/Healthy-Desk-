@@ -39,4 +39,10 @@ export class HomeService {
       console.log(profile)
     });
   }
+
+  isUserStanding(deskHeight: number, standingHeight: number) {
+    if((deskHeight > standingHeight - 10) && (deskHeight < standingHeight + 10))
+      return true;
+    else return false;
+  }
 }
