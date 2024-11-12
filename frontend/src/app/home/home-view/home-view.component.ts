@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'; 
 import { HomeService } from '../home.service';
 import { Profile } from '../../models/profile.model';
+import { DeskApiService } from '../../services/desk-api.service';
 
 @Component({
   selector: 'app-home-view',
@@ -8,7 +9,7 @@ import { Profile } from '../../models/profile.model';
   styleUrls: ['./home-view.component.css']
 })
 export class HomeViewComponent implements OnInit {
-  constructor(private homeService: HomeService) {}
+  constructor(private homeService: HomeService, private apiDeskService: DeskApiService) {}
 
   curDeskHeight: number = 68;
   height: number = 68;
@@ -27,6 +28,23 @@ export class HomeViewComponent implements OnInit {
     this.profiles = this.homeService.profiles;
   }
 
+  // updateDeskHeight(){
+  //   this.apiDeskService.updateDeskPosition(this.curDeskHeight).subscribe();
+  //   console.log("updateDeskHeight is beeing caled with parameters: " + this.curDeskHeight);
+  // }
+
+  updateDeskHeight() {
+    console.log('Desk height:', this.curDeskHeight); // Debugging line
+    this.apiDeskService.updateDeskPosition(this.curDeskHeight).subscribe({
+      next: (response) => {
+        console.log('Desk position updated successfully:', response);
+      },
+      error: (error) => {
+        console.error('Failed to update desk position:', error);
+      }
+    });
+  }
+
   createProfilePopUp() {
     this.isFormVisible = !this.isFormVisible;
   }
@@ -42,6 +60,7 @@ export class HomeViewComponent implements OnInit {
   increaseHeight() {
     if (this.curDeskHeight < 132) {
       this.curDeskHeight += 1;
+      this.updateDeskHeight();
     }
   }
 
@@ -60,6 +79,7 @@ export class HomeViewComponent implements OnInit {
       this.holdTime = Math.max(20, this.holdTime - 20);
       this.clearAndRestartInterval(() => this.onHoldIncrease());
     }, this.holdTime);
+    this.updateDeskHeight();
   }
 
   onHoldDecrease() {
@@ -71,6 +91,7 @@ export class HomeViewComponent implements OnInit {
       this.holdTime = Math.max(20, this.holdTime - 20);
       this.clearAndRestartInterval(() => this.onHoldDecrease());
     }, this.holdTime);
+    this.updateDeskHeight();
   }
 
   clearAndRestartInterval(callback: () => void) {
