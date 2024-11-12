@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Desk {
-  id: string;
-  name: string;
-  manufacturer: string;
-  position: number;
-  speed: number;
-  status: string;
-}
-
+import { Desk } from '../models/DeskModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeskApiService {
+
   private conectedDeskId: string = '';
 
   private apiUrl = 'http://localhost:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
+
+ //  private apiUrl = 'http://localhost:3000/api/desks'
+
 
   constructor(private http: HttpClient) {}
 
@@ -30,6 +25,7 @@ export class DeskApiService {
     const deskUrl = `${this.apiUrl}/${deskId}`;
     return this.http.get<Desk>(deskUrl);
   }
+
 
   updateDeskPosition(position: number): Observable<any> {
     // const url = `http://127.0.0.1:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks/cd:fb:1a:53:fb:e6`;
@@ -72,3 +68,6 @@ export class DeskApiService {
   //   return localStorage.getItem('deskId');
   // }
 }
+
+
+
