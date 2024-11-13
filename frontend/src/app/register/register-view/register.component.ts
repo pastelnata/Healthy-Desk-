@@ -8,32 +8,28 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  hours!: number;
-  minutes!: number;
-  userHeight!: number;
+  hours?: number; // Remove the initial assignment and make these optional
+  minutes?: number;
+  userHeight?: number;
 
   constructor(private homeService: HomeService, private router: Router) {}
-
-  ngOnInit() {
-    this.hours = 0;
-    this.minutes = 0;
-    this.userHeight = 0;
-  }
   
   validateHours() {
-    this.homeService.hours = this.hours;
+    this.homeService.hours = this.hours ?? 0; // Use 0 if hours is undefined
     this.homeService.validateHours();
   }
 
   validateMinutes() {
-    this.homeService.minutes = this.minutes;
+    this.homeService.minutes = this.minutes ?? 0; // Use 0 if minutes is undefined
     this.homeService.validateMinutes();
   }
 
   register() {
-    this.homeService.hours = this.hours;
-    this.homeService.minutes = this.minutes;
-    this.homeService.userHeight = this.userHeight;
+    // Use 0 as a fallback for undefined values
+    this.homeService.hours = this.hours ?? 0;
+    this.homeService.minutes = this.minutes ?? 0;
+    this.homeService.userHeight = this.userHeight ?? 0;
+
     this.homeService.saveDefaultProfile();
     this.router.navigate(['']);
   }
