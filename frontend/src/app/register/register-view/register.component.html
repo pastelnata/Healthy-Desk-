@@ -1,19 +1,92 @@
-<p>register works!</p>
-<section id="register">
-    <p id="stand-every">Your Height (cm):</p>
-    <input id="userHeight" [(ngModel)]="userHeight" type="number" min="150" max="210" step="1" placeholder="50"/>
-    <p>Your desk will rise every: </p>
-    <form id="timer-form">
-        <div class="time">
-            <label for="hours">Hours</label>
-            <input id="hours" name="hours" type="number" min="0" max="23"
-            [(ngModel)]="hours" (ngModelChange)="validateHours()"/>
+<link
+  href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+  rel="stylesheet"
+/>
+
+<!-- Registration Form and Height/Timer Form in the same box -->
+<div class="container">
+  <div class="form-box register">
+    <form action="">
+      <h1>Registration</h1>
+
+      <!-- Username Input -->
+      <div class="input-box">
+        <input type="text" placeholder="Username" required />
+        <i class="bx bx-user"></i>
+      </div>
+
+      <!-- Email Input -->
+      <div class="input-box">
+        <input type="email" placeholder="Email" required />
+        <i class="bx bx-envelope"></i>
+      </div>
+
+      <!-- Password Input -->
+      <div class="input-box">
+        <input type="password" placeholder="Password" required />
+        <i class="bx bxs-lock-alt"></i>
+      </div>
+
+      <!-- Your Height Section -->
+      <div class="input-box">
+        <input
+          id="userHeight"
+          [(ngModel)]="userHeight"
+          type="number"
+          min="150"
+          max="210"
+          step="1"
+          placeholder="Your Height (cm)"
+          required
+        />
+      </div>
+
+      <!-- Your Desk Will Rise Every Section -->
+      <div class="input-box combined">
+        <input
+          id="deskRiseEvery"
+          type="text"
+          placeholder="Your desk will rise every:"
+          disabled
+        />
+        <div class="time-inputs">
+          <input
+            id="hours"
+            name="hours"
+            type="number"
+            min="0"
+            max="23"
+            [(ngModel)]="hours"
+            (ngModelChange)="validateHours()"
+            placeholder="Hours"
+            required
+          />
+          <input
+            id="minutes"
+            name="minutes"
+            type="number"
+            min="0"
+            max="59"
+            [(ngModel)]="minutes"
+            (ngModelChange)="validateMinutes()"
+            placeholder="Minutes"
+            required
+          />
         </div>
-        <div class="time">
-            <label for="minutes">Minutes</label>
-            <input id="minutes" name="minutes" type="number" min="0" max="59" 
-            [(ngModel)]="minutes" (ngModelChange)="validateMinutes()"/>
-        </div>
+      </div>
+      
+     <!-- Register Button -->
+<button type="submit" class="button" (click)="register()">Register</button>
+
+      <p>or register with social platforms</p>
+
+      <!-- Social Media Login Icons -->
+      <div class="social-icons">
+        <a href="#"><i class="bx bxl-google">Google</i></a>
+        <a href="#"><i class="bx bxl-linkedin-square">Linkedin</i></a>
+        <a href="#"><i class="bx bxl-facebook-square">Facebook</i></a>
+        <a href="#"><i class="bx bxl-github"></i>Github</a>
+      </div>
     </form>
-    <button (click)="register()">Register</button>
-</section>
+  </div>
+</div>
