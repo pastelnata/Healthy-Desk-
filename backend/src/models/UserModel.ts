@@ -9,15 +9,15 @@ interface IUser {
 }
 
 class User extends Model implements IUser {
-    userid!: number;
-    username!: string;
-    email!: string;
-    password!: string;
-    height!: number;
-    mot_lvl!: 'low' | 'medium' | 'high';
-    avg_standing_hrs!: number;
-    times_moved!: number;
-    calories_burned!: number;
+    public userid!: number;
+    public username!: string;
+    public email!: string;
+    public password!: string;
+    public height!: number;
+    public mot_lvl!: 'low' | 'medium' | 'high';
+    public avg_standing_hrs!: number;
+    public times_moved!: number;
+    public calories_burned!: number;
 }
 
 User.init(
@@ -34,6 +34,7 @@ User.init(
         email: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
         },
         password: {
             type: DataTypes.STRING,
@@ -47,12 +48,22 @@ User.init(
             type: DataTypes.ENUM('low', 'medium', 'high'),
             allowNull: false,
         },
-        avg_standing_hrs: DataTypes.INTEGER,
-        times_moved: DataTypes.INTEGER,
-        calories_burned: DataTypes.INTEGER,
+        avg_standing_hrs: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        times_moved: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        calories_burned: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
     },
     {
         sequelize,
+        modelName: 'User',
         tableName: 'User',
         timestamps: false,
     }

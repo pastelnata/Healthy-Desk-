@@ -6,24 +6,24 @@
 <!-- Registration Form and Height/Timer Form in the same box -->
 <div class="container">
   <div class="form-box register">
-    <form action="">
+    <form (ngSubmit)="register()">
       <h1>Registration</h1>
 
       <!-- Username Input -->
       <div class="input-box">
-        <input type="text" placeholder="Username" required />
+        <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required />
         <i class="bx bx-user"></i>
       </div>
 
       <!-- Email Input -->
       <div class="input-box">
-        <input type="email" placeholder="Email" required />
+        <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required />
         <i class="bx bx-envelope"></i>
       </div>
 
       <!-- Password Input -->
       <div class="input-box">
-        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required />
         <i class="bx bxs-lock-alt"></i>
       </div>
 
@@ -31,7 +31,8 @@
       <div class="input-box">
         <input
           id="userHeight"
-          [(ngModel)]="userHeight"
+          name="height"
+          [(ngModel)]="height"
           type="number"
           min="150"
           max="210"
@@ -40,15 +41,18 @@
           required
         />
       </div>
+      <div>
+        <label for="mot_lvl">Motivation Level:</label>
+        <select id="mot_lvl" name="mot_lvl" [(ngModel)]="mot_lvl" required>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
 
       <!-- Your Desk Will Rise Every Section -->
       <div class="input-box combined">
-        <input
-          id="deskRiseEvery"
-          type="text"
-          placeholder="Your desk will rise every:"
-          disabled
-        />
+        <p>Your desk will rise every: </p>
         <div class="time-inputs">
           <input
             id="hours"
@@ -76,7 +80,7 @@
       </div>
       
      <!-- Register Button -->
-<button type="submit" class="button" (click)="register()">Register</button>
+      <button type="submit" class="button">Register</button>
 
       <p>or register with social platforms</p>
 
