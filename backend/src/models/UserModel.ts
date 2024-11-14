@@ -9,15 +9,15 @@ interface IUser {
 }
 
 class User extends Model implements IUser {
-    userid!: number;
-    username!: string;
-    email!: string;
-    password!: string;
-    height!: number;
-    mot_lvl!: 'low' | 'medium' | 'high';
-    avg_standing_hrs!: number;
-    times_moved!: number;
-    calories_burned!: number;
+    public userid!: number;
+    public username!: string;
+    public email!: string;
+    public password!: string;
+    public height!: number;
+    public mot_lvl!: 'low' | 'medium' | 'high';
+    public avg_standing_hrs!: number;
+    public times_moved!: number;
+    public calories_burned!: number;
 }
 
 User.init(
