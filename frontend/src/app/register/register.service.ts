@@ -114,5 +114,4 @@ export class RegisterService {
     
     return newProfile;
   }
-
 }
