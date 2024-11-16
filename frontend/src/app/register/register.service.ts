@@ -43,7 +43,7 @@ export class RegisterService {
     return newUser;
   }
 
-  /*registerDefaultProfile(hours: number, minutes: number, userHeight: number) {
+  registerDefaultProfile(hours: number, minutes: number, userHeight: number) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const newProfile = this.newDefaultProfile(hours, minutes, userHeight);
     
@@ -67,5 +67,5 @@ export class RegisterService {
     });
     
     return newProfile;
-  }*/
+  }
 }

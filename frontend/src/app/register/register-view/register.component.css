@@ -164,3 +164,21 @@ form {
 .social-icons {
   margin-top: 20px; /* Adjust the distance between the form and social icons */
 }
+
+select {
+  width: 100%;
+  padding: 13px 20px;
+  background: #eee;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  margin: 20px 0;
+}
+
+select::placeholder {
+  color: #888;
+  font-weight: 400;
+}

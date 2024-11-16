@@ -30,12 +30,37 @@ export class RegisterComponent {
   }
 
   register(): void {
-    this.registerService.registerUser(this.username, this.email, this.password, this.height, this.mot_lvl, 0, 0, 0).subscribe(response => {
-      console.log('User registered:', response);
-    }, error => {
-      console.error('Error registering user:', error);
-    });
-    //this.registerService.registerDefaultProfile(this.hours, this.minutes, this.height);
-    this.router.navigate(['']);
+    let isFilled: boolean = this.checkIfFilled();
+    
+    if (isFilled === true) {
+      let validHeight: boolean = this.validateUserHeight();
+      if (validHeight === false) {
+        return;
+      } else {
+        this.registerService.registerUser(this.username, this.email, this.password, this.height, this.mot_lvl, 0, 0, 0).subscribe(response => {
+          console.log('User registered:', response);
+        }, error => {
+          console.error('Error registering user:', error);
+        });
+        //this.registerService.registerDefaultProfile(this.hours, this.minutes, this.height);
+        this.router.navigate(['']);
+      }  
+    }
+  }
+
+  validateUserHeight(): boolean {
+    if (this.height < 140 || this.height > 220) {
+      alert('Please enter a height between 140 and 220 cm');
+      return false;
+    }
+    return true;
+  }
+
+  checkIfFilled(): boolean {
+    if (this.username === '' || this.email === '' || this.password === '') {
+      alert('Please fill in all fields');
+      return false;
+    }
+    return true;
   }
 }

@@ -28,55 +28,26 @@
       </div>
 
       <!-- Your Height Section -->
+      <label for="userHeight">Your Height (cm)</label>
       <div class="input-box">
         <input
           id="userHeight"
           name="height"
           [(ngModel)]="height"
           type="number"
-          min="150"
+          min="140"
           max="210"
           step="1"
-          placeholder="Your Height (cm)"
           required
         />
       </div>
       <div>
-        <label for="mot_lvl">Motivation Level:</label>
+        <label for="mot_lvl">How Motivated Are You To Change Your Healthy Habits?</label>
         <select id="mot_lvl" name="mot_lvl" [(ngModel)]="mot_lvl" required>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="low">Not Motivated</option>
+          <option value="medium" selected>Motivated</option>
+          <option value="high">Very Motivated</option>
         </select>
-      </div>
-
-      <!-- Your Desk Will Rise Every Section -->
-      <div class="input-box combined">
-        <p>Your desk will rise every: </p>
-        <div class="time-inputs">
-          <input
-            id="hours"
-            name="hours"
-            type="number"
-            min="0"
-            max="23"
-            [(ngModel)]="hours"
-            (ngModelChange)="validateHours()"
-            placeholder="Hours"
-            required
-          />
-          <input
-            id="minutes"
-            name="minutes"
-            type="number"
-            min="0"
-            max="59"
-            [(ngModel)]="minutes"
-            (ngModelChange)="validateMinutes()"
-            placeholder="Minutes"
-            required
-          />
-        </div>
       </div>
       
      <!-- Register Button -->
