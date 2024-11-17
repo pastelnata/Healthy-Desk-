@@ -1,8 +1,7 @@
 import client from './config/database';
 import server from './config/server';
-import DeskController from './controllers/DeskControllers';
-import deskRouter from './routes/DeskRoutes';
-import { DeskApiService } from './services/DeskServices';
+import deskRoutes from './routes/DeskRoutes';
+import userRoutes from './routes/UserRoutes';
 
 const port = process.env.PORT || 3000;
 
@@ -22,4 +21,7 @@ client.connect()
 
 
 // desk routes setup
-server.use('/api', deskRouter)
+server.use('/api', deskRoutes)
+
+// user routes setup
+server.use('/api', userRoutes)
