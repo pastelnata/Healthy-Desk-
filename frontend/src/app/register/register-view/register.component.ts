@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { HomeService } from '../../home/home.service';
 import { Router } from '@angular/router';
 import { RegisterService } from '../register.service';
-import { Profile } from '../../models/profile.model';
 
 @Component({
   selector: 'app-register',

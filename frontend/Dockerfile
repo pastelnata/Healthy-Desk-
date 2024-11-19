@@ -8,7 +8,7 @@ WORKDIR /Healthy-Desk-
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --legacy-peer-deps
+RUN npm install
 # Install Angular CLI globally
 RUN npm install -g @angular/cli
 
