@@ -9,7 +9,7 @@ RUN npm install dotenv
 RUN npm install -g typescript
 RUN npm install @types/dotenv --save-dev
 COPY package*.json ./
-RUN npm install --force
+RUN npm install
 
 # Copy code
 COPY backend ./backend

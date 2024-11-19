@@ -1,36 +1,64 @@
 import { Component } from '@angular/core';
 import { HomeService } from '../../home/home.service';
 import { Router } from '@angular/router';
+import { RegisterService } from '../register.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
-  hours?: number; // Remove the initial assignment and make these optional
-  minutes?: number;
-  userHeight?: number;
 
-  constructor(private homeService: HomeService, private router: Router) {}
-  
+export class RegisterComponent {
+  username: string = '';
+  email!: string;
+  password: string = '';
+  height: number = 0;
+  hours: number = 0;
+  minutes: number = 0;
+  mot_lvl!: 'low';
+
+  constructor(private homeService: HomeService, private router: Router, private registerService: RegisterService) {}
   validateHours() {
-    this.homeService.hours = this.hours ?? 0; // Use 0 if hours is undefined
     this.homeService.validateHours();
   }
 
   validateMinutes() {
-    this.homeService.minutes = this.minutes ?? 0; // Use 0 if minutes is undefined
     this.homeService.validateMinutes();
   }
 
-  register() {
-    // Use 0 as a fallback for undefined values
-    this.homeService.hours = this.hours ?? 0;
-    this.homeService.minutes = this.minutes ?? 0;
-    this.homeService.userHeight = this.userHeight ?? 0;
+  register(): void {
+    let isFilled: boolean = this.checkIfFilled();
+    
+    if (isFilled === true) {
+      let validHeight: boolean = this.validateUserHeight();
+      if (validHeight === false) {
+        return;
+      } else {
+        this.registerService.registerUser(this.username, this.email, this.password, this.height, this.mot_lvl, 0, 0, 0).subscribe(response => {
+          console.log('User registered:', response);
+        }, error => {
+          console.error('Error registering user:', error);
+        });
+        //this.registerService.registerDefaultProfile(this.hours, this.minutes, this.height);
+        this.router.navigate(['']);
+      }  
+    }
+  }
 
-    this.homeService.saveDefaultProfile();
-    this.router.navigate(['']);
+  validateUserHeight(): boolean {
+    if (this.height < 140 || this.height > 220) {
+      alert('Please enter a height between 140 and 220 cm');
+      return false;
+    }
+    return true;
+  }
+
+  checkIfFilled(): boolean {
+    if (this.username === '' || this.email === '' || this.password === '') {
+      alert('Please fill in all fields');
+      return false;
+    }
+    return true;
   }
 }

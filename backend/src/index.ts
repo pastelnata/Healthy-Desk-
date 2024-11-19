@@ -2,6 +2,7 @@ import client from './config/database';
 import server from './config/server';
 import deskRoutes from './routes/DeskRoutes';
 import userRoutes from './routes/UserRoutes';
+import profileRoutes from './routes/ProfileRoutes';
 
 const port = process.env.PORT || 3000;
 
@@ -25,3 +26,6 @@ server.use('/api', deskRoutes)
 
 // user routes setup
 server.use('/api', userRoutes)
+
+// profile routes setup
+server.use('/api', profileRoutes)

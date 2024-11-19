@@ -24,22 +24,6 @@ export class HomeService {
     else if (this.minutes < 0) this.minutes = 0;
   }
 
-  saveDefaultProfile() {
-    const time = `${this.hours}h ${this.minutes}m`;
-
-    const newProfile: Profile = {
-      title: 'Default Profile',
-      height: Math.round(this.userHeight * 0.61),
-      time: time
-    };
-
-    this.profiles.push(newProfile);
-
-    this.profiles.forEach(profile => {
-      console.log(profile)
-    });
-  }
-
   isUserStanding(deskHeight: number, standingHeight: number) {
     if((deskHeight > standingHeight - 10) && (deskHeight < standingHeight + 10))
       return true;
