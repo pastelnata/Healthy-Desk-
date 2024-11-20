@@ -11,6 +11,7 @@ export class HomeService {
   userHeight!: number;
   motivationLevel!: string;
   profiles: Profile[] = [];
+  profileId: string = '';
 
   constructor() {
   }

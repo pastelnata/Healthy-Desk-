@@ -82,7 +82,8 @@ export class RegisterService {
       title: 'Standing Profile',
       deskHeight: Math.round(userHeight * 0.61),
       time: time,
-      userId: 3
+      userId: 3,
+      profileId: Date.now().toString(),
     };
 
     this.homeService.profiles.push(newProfile);
@@ -101,7 +102,8 @@ export class RegisterService {
       title: 'Sitting Profile',
       deskHeight: Math.round(userHeight * 0.43),
       time: time,
-      userId: 3
+      userId: 3,
+      profileId: Date.now().toString()
     };
 
     this.homeService.profiles.push(newProfile);
