@@ -9,6 +9,7 @@ export class HomeService {
   hours: number = 0;
   minutes: number = 0;
   userHeight!: number;
+  motivationLevel!: string;
   profiles: Profile[] = [];
 
   constructor() {
