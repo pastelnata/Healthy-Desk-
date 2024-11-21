@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../home.service';
 import { Profile } from '../../models/profile.model';
 import { DeskApiService } from '../../services/desk-api.service';
+import { Data } from '@angular/router';
 
 @Component({
   selector: 'app-home-view',
@@ -11,12 +12,14 @@ import { DeskApiService } from '../../services/desk-api.service';
 export class HomeViewComponent implements OnInit {
   constructor(private homeService: HomeService, private apiDeskService: DeskApiService) {}
 
+  profileId: string = '';
   curDeskHeight: number = 68;
   height: number = 68;
   profileTitle: string = '';
   hours!: number;
   minutes!: number;
   profiles!: Profile[];
+  motivationLevel: string = ''; 
   isFormVisible: boolean = false;
 
   private intervalId: any;
@@ -26,6 +29,8 @@ export class HomeViewComponent implements OnInit {
     this.hours = this.homeService.hours;
     this.minutes = this.homeService.minutes;
     this.profiles = this.homeService.profiles;
+    this.motivationLevel = this.homeService.motivationLevel;
+    this.profileId = this.homeService.profileId;
   }
 
   // updateDeskHeight(){
@@ -45,17 +50,7 @@ export class HomeViewComponent implements OnInit {
     });
   }
 
-  createProfilePopUp() {
-    this.isFormVisible = !this.isFormVisible;
-  }
-
-  validateHours() {
-    this.homeService.validateHours();
-  }
-
-  validateMinutes() {
-    this.homeService.validateMinutes();
-  }
+  //Desk height control button
 
   increaseHeight() {
     if (this.curDeskHeight < 132) {
@@ -106,27 +101,70 @@ export class HomeViewComponent implements OnInit {
     }
   }
 
+  //Profile form control
+
+  createProfilePopUp() {
+    this.isFormVisible = !this.isFormVisible;
+  }
+
+  validateHours() {
+    this.homeService.validateHours();
+  }
+
+  validateMinutes() {
+    this.homeService.validateMinutes();
+  }
+
+  //Profiles logic
+
   saveProfile() {
     const time = `${this.hours}h ${this.minutes}m`;
 
-    if (this.profileTitle === '') {
-      this.profileTitle = 'No Title';
+    if(this.profileId === '') {
+      if (this.profileTitle === '') {
+        this.profileTitle = 'No Title';
+      }
+
+      const newProfile: Profile = {
+        userId: 3,
+        profileId: Date.now().toString(),
+        title: this.profileTitle,
+        deskHeight: this.height,
+        time: time,
+      };
+      this.profiles.push(newProfile);
+      this.clearForm();
+      this.isFormVisible = false;
+    } 
+    else 
+    {
+      this.profiles.forEach(profile => {
+        if (profile.profileId === this.profileId) {
+          profile.title = this.profileTitle;
+          profile.deskHeight = this.height;
+          profile.time = time;
+        }
+        this.clearForm();
+        this.isFormVisible = false;
+      })
     }
+  }
+  
+  //Edit profile
 
-    const newProfile: Profile = {
-      title: this.profileTitle,
-      deskHeight: this.height,
-      time: time,
-      userid: 3
-    };
-
-    this.profiles.push(newProfile);
-
-    this.clearForm();
-    this.isFormVisible = false;
+  editProfile(id: number) {
+    this.isFormVisible = !this.isFormVisible;
+    const profile = this.profiles[id];
+    this.profileTitle = profile.title;
+    this.height = profile.deskHeight;
+    this.hours = this.homeService.hours;
+    this.minutes = this.homeService.minutes;
+    this.profileId = profile.profileId;
   }
 
+
   clearForm() {
+    this.profileId = '';
     this.profileTitle = '';
     this.height = 0;
     this.hours = 0;
