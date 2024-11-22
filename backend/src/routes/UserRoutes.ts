@@ -9,5 +9,6 @@ userRoutes.post('/users', (req, res) => {
     console.log('POST /users route hit');
     userController.createUser(req, res);
 });
+userRoutes.post('/user', (req, res) => userController.loginUser(req,res)); 
 
 export default userRoutes;
