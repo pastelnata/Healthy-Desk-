@@ -14,7 +14,7 @@ services:
       - app-network
 
   backend:
-    image: healthy-desk-backend
+    image: healthy-desk-backend:latest
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -31,9 +31,18 @@ services:
       - database
     networks:
       - app-network
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /Healthy-Desk-/backend
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
 
   frontend:
-    image: healthy-desk-frontend
+    image: healthy-desk-frontend:latest
     build:
       context: .
       dockerfile: frontend/Dockerfile
@@ -43,6 +52,15 @@ services:
       - "4200:4200"
     networks:
       - app-network
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /Healthy-Desk-/frontend
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
 
 volumes:
   postgres-data:
