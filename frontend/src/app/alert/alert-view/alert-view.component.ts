@@ -9,16 +9,17 @@ import { AlertService } from '../alert.service';
 export class AlertViewComponent {
   constructor(private alertService: AlertService) { }
   
-  currentAlertSount = "soft";
+  sendAlert1() {
+    const currentAlertSount = "low";
+    this.alertService.sendAlert(currentAlertSount);
+  }
 
-  sendAlert() {
-    this.alertService.sendAlert(this.currentAlertSount).subscribe(
-      (response: any) => {
-        console.log('Success:', response);
-      },
-      (error: any) => {
-        console.error('Error:', error);
-      }
-    );
+  sendAlert2() {
+    const currentAlertSount = "medium";
+    this.alertService.sendAlert(currentAlertSount);
+  }
+  sendAlert3() {
+    const currentAlertSount = "high";
+    this.alertService.sendAlert(currentAlertSount);
   }
 }

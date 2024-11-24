@@ -7,6 +7,9 @@ import { Observable } from 'rxjs';
 export class AlertService {
 
   constructor(private http: HttpClient) { }
+  
+  apiUrl = 'http://192.168.0.104/';
+  
   motivationLevel: string = 'low';
   standingUpTime: number = 0;
 
@@ -22,17 +25,11 @@ export class AlertService {
   return this.standingUpTime;
   }
 
-
-  apiUrlBuzzer = 'http://192.168.0.104/api/sound-controll';
-
-  sendAlert(alertType: string): Observable<any> {
-    const body = {
-      alert: alertType  
-    };
-
-    return this.http.post(this.apiUrlBuzzer, body, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+  sendAlert(param: string) {
+    console.log('Playing sound...');
+    const url = `${this.apiUrl}${param}?`;
+    this.http.get(url)
+      .subscribe();
   }
 
 }
