@@ -24,6 +24,22 @@ class UserController {
             res.status(500).send(error);
         }
     }
+
+    //Log in user 
+
+    async loginUser(req: Request, res: Response){
+        try{
+            const {username, password} = req.body;
+            console.log(req.body) 
+            console.log('Recived request to check for ussername and password', req.body);
+            const userData = await UserService.loginUser(username, password);
+            res.status(200).json(userData);
+            }
+        catch(error){
+            console.log("Error in the userControler");
+            res.status(500).send(error);
+        }
+    }
 }
 
 export default UserController;

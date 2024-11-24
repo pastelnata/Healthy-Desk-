@@ -44,6 +44,7 @@ export class RegisterService {
 
   newUser(username: string, email: string, password: string, height: number, mot_lvl: 'low' | 'medium' | 'high', avg_standing_hrs: number, times_moved: number, calories_burned: number): User {
     const newUser: User = {
+      userid: 3, //This should not be like that
       username: username,
       email: email,
       password: password,

@@ -1,16 +1,15 @@
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <div class="container">
     <div class="form-box login">
-      <form action="">
+      <form (ngSubmit)="logIn()">
         <h1>Login</h1>
         <div class="input-box">
-            <input type="text" placeholder="Username"
-            required>
-            <i class='bx bx-user'></i>
+          <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required />
+          <i class='bx bx-user'></i>
         </div>
         <div class="input-box">
           <input type="password" placeholder="Password"
-          required>
+          required name="password" [(ngModel)]="password">
           <i class='bx bxs-lock-alt'></i>
       </div>
       <div class="forgot-link">
