@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
-
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
+  
+  apiUrl = 'http://192.168.0.104/';
+  
   motivationLevel: string = 'low';
   standingUpTime: number = 0;
 
@@ -19,6 +23,13 @@ export class AlertService {
     }
 
   return this.standingUpTime;
+  }
+
+  sendAlert(param: string) {
+    console.log('Playing sound...');
+    const url = `${this.apiUrl}${param}?`;
+    this.http.get(url)
+      .subscribe();
   }
 
 }
