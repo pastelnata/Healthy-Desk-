@@ -1,6 +1,6 @@
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <div class="container">
-    <div class="form-box login">
+    <div class="form-box login" *ngIf="!isLoggedIn()">
       <form (ngSubmit)="logIn()">
         <h1>Login</h1>
         <div class="input-box">
@@ -24,5 +24,12 @@
         <a href="#"><i class='bx bxl-github'></i></a>
       </div>
       </form>
+    </div>
+    <div class="already-logged-in" *ngIf="isLoggedIn()">
+      <h3>You are logged in!</h3>
+      <p>Username: {{ loggedInUser?.username }}</p>
+      <div class="button-container">
+        <button (click)="logOut()" class="logout-button">Log out</button>
+      </div>
     </div>
   </div>
