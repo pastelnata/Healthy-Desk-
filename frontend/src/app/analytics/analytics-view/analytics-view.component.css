@@ -65,18 +65,18 @@ p {
 
 .pie-chart-container {
   display: flex;
-  justify-content: center; /* Center the chart horizontally */
-  align-items: center; /* Center the chart vertically */
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  max-width: 600px; /* Optional: Restrict maximum size */
-  height: 400px; /* Ensure sufficient space for the chart */
-  margin: 20px 0; /* Add some spacing from other elements */
+  max-width: 600px;
+  height: 400px;
+  margin: 20px 0;
   padding: 10px;
-  border-radius: 10px; /* Optional rounded border */
+  border-radius: 10px;
   background-color: transparent;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
-  position: absolute; /* Use absolute positioning to center within the viewport */
-  top: 50%; /* Position vertically at the middle of the screen */
-  left: 50%; /* Position horizontally at the middle of the screen */
-  transform: translate(-50%, -50%); /* Offset by half of its own size to achieve perfect centering */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

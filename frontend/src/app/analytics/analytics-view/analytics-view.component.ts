@@ -34,9 +34,9 @@ export class AnalyticsViewComponent {
       title: {
         text: 'Time Spent:',
         style: {
-          color: '#84C6DC', // Set your desired color (e.g., Hex, RGB, or named color)
-          fontSize: '30px', // Optional: Adjust font size
-          fontWeight: 'bold', // Optional: Adjust font weight
+          color: '#84C6DC',
+          fontSize: '30px',
+          fontWeight: 'bold',
           textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)'
         }
       },
