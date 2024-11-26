@@ -62,3 +62,17 @@ p {
   color: #333;
   font-size: 1em;
 }
+
+.pie-chart-container {
+  display: flex;
+  justify-content: center; /* Center the chart horizontally */
+  align-items: center; /* Center the chart vertically */
+  width: 100%;
+  max-width: 600px; /* Optional: Restrict maximum size */
+  height: 400px; /* Ensure sufficient space for the chart */
+  margin: 20px 0; /* Add some spacing from other elements */
+  padding: 10px;
+  border-radius: 10px; /* Optional rounded border */
+  background-color: #fff; /* Ensure background contrast */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}

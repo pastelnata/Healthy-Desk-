@@ -25,11 +25,13 @@
     "@angular/platform-browser-dynamic": "^18.2.12",
     "@angular/router": "^18.2.12",
     "@types/pg": "^8.11.10",
+    "angular-highcharts": "^17.0.1",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "highcharts": "^11.4.8",
     "pg": "^8.13.1",
     "sequelize": "^6.37.5",
     "zone.js": "^0.14.10"
