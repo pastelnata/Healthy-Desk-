@@ -14,18 +14,19 @@ class UserService {
     
     //Recive user username and password form frontend and check if credentials are correct
     static async loginUser(username: string, password: string) {
-        try{
-            const user = await User.findOne({ where: {username, password}});
-            if(!user){
-                console.log('User not found');
+        try {
+            const user = await User.findOne({ where: { username, password } });
+    
+            if (!user) {
+                console.log('User not found or invalid credentials');
+                return null;
             }
+            console.log('User logged in:', user.username);
             return user;
+        } catch (error) {
+            console.error("Error in loginUser:", error);
+            throw error;
         }
-        catch(error){
-            console.error("Error in the loginUser,", error)
-            throw(error)
-        }
-
     }
 
     static async createUser(username: string, email: string, password: string, height: number, mot_lvl: 'low' | 'medium' | 'high') {

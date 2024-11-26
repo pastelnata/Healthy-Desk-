@@ -27,19 +27,26 @@ class UserController {
 
     //Log in user 
 
-    async loginUser(req: Request, res: Response){
-        try{
+    async loginUser(req: Request, res: Response) {
+        try {
             const {username, password} = req.body;
-            console.log(req.body) 
-            console.log('Recived request to check for ussername and password', req.body);
+            console.log('Received request to check for username and password:', req.body);
             const userData = await UserService.loginUser(username, password);
-            res.status(200).json(userData);
+    
+            // Error when login credentials are wrong
+            if (!userData) {
+                return res.status(401).json({ success: false, message: 'Wrong login credentials' });
             }
-        catch(error){
-            console.log("Error in the userControler");
-            res.status(500).send(error);
+
+            const isManager = (username === "user2");
+            return res.status(200).json({ success: true, user: userData, isManager });
+            
+        } catch (error) {
+            console.log("Error in loginUser controller:", error);
+            res.status(500).send({ success: false, message: "Internal server error" });
         }
     }
+    
 }
 
 export default UserController;
