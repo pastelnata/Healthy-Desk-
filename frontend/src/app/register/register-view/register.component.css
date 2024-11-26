@@ -1,43 +1,69 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
 /* Global styles */
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
 html,
 body {
   height: 100%;
 }
-body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
+.register-page{
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
 }
 
+
 .container {
-  position: relative;
-  width: 850px;
-  height: 850px; /* Adjusted height to fit all content */
-  background: #fff;
-  border-radius: 30px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
+  align-items: center;
+  background: lightblue;
+  margin: 2vh 0vh 2vh 0vh;
+  max-width: 70vh;
+  height: 95vh;
+  border-radius: 30px;
+  box-shadow: 0 0 2vh rgba(0, 0, 0, 2);
+  overflow: hidden;
+  
+}
+
+.form-box {
+  
+  width: 100%;
+  height: 100%;
+  background: lightblue;
+  display: flex;
+  align-items: center;
+  color: #333;
+  text-align: center;
+  padding: 40px;
+}
+
+.button {
+  width: 100%;
+  height: 48px;
+  background: #7494ec;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 600;
 }
 
 .form-box {
   width: 90%;
-  padding: 40px;
+  padding: 3.5vh;
   background: lightblue;
   display: flex;
   flex-direction: column;
@@ -48,18 +74,14 @@ body {
   height: 100%;
 }
 
-form {
-  width: 100%;
-}
 
 .container h1 {
   font-size: 36px;
-  margin: -10px 0;
 }
 
 .input-box {
   position: relative;
-  margin: 20px 0;
+  margin: 3vh 0;
 }
 
 .input-box input {
@@ -72,7 +94,7 @@ form {
   font-size: 16px;
   color: #333;
   font-weight: 500;
-  z-index: 1; /* Ensure input is on top */
+  z-index: 1; 
 }
 
 .input-box input::placeholder {
@@ -144,25 +166,38 @@ form {
   font-weight: 600;
 }
 
+.button:hover {
+  background-color: #8fa8ee;
+}
+
 .container p {
   font-size: 14.5px;
   margin: 15px 0;
 }
 
 /* Social icons section */
-.social-icons a {
-  display: inline-flex;
-  padding: 10px;
-  border: 2px solid #7494ec;
-  border-radius: 8px;
-  font-size: 24px;
-  color: #333;
-  text-decoration: none;
-  margin: 0 8px;
+.social-icons {
+  display: grid;
+  gap: 2vh;
+  grid-template-columns: repeat(auto-fit, minmax(8vh, 1fr)); 
+  padding: 0vh 5vh 0vh 5vh;
 }
 
-.social-icons {
-  margin-top: 20px; /* Adjust the distance between the form and social icons */
+.icon-box {
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 2px solid #7494ec;
+  border-radius: 8px;
+  min-height: 4vh;
+  color: #333;
+  text-decoration: none;
+}
+
+.icon-box i {
+  text-align: center;
+  padding: 1vh 1vh 0vh 1vh;
+  font-size: 2em;
+  color: #333;
 }
 
 select {

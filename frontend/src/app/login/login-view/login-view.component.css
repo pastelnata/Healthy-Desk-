@@ -101,6 +101,10 @@ form {
   font-weight: 600;
 }
 
+.button:hover {
+  background-color: #8fa8ee;
+}
+
 .container p {
   font-size: 14.5px;
   margin: 15px 0;
