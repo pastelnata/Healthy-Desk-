@@ -28,14 +28,16 @@ export class AnalyticsViewComponent {
   
     this.pieChart = new Chart({
       chart: {
-        type: 'pie'
+        type: 'pie',
+        backgroundColor: 'transparent'
       },
       title: {
         text: 'Time Spent:',
         style: {
-          color: 'rgb(85, 179, 211)', // Set your desired color (e.g., Hex, RGB, or named color)
-          fontSize: '18px', // Optional: Adjust font size
-          fontWeight: 'bold' // Optional: Adjust font weight
+          color: '#84C6DC', // Set your desired color (e.g., Hex, RGB, or named color)
+          fontSize: '30px', // Optional: Adjust font size
+          fontWeight: 'bold', // Optional: Adjust font weight
+          textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)'
         }
       },
       tooltip: {
@@ -61,8 +63,8 @@ export class AnalyticsViewComponent {
           type: 'pie',
           name: 'Time Distribution',
           data: [
-            { name: 'Standing', y: 40, color: '#36A2EB' },
-            { name: 'Sitting', y: 60, color: '#FF6384' }
+            { name: 'Standing', y: 40, color: '#84C6DC' },
+            { name: 'Sitting', y: 60, color: '#B3E0F3' }
           ]
         }
       ]
