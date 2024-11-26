@@ -7,6 +7,7 @@ import { AnalyticsViewComponent } from './analytics/analytics-view/analytics-vie
 import { ScoreViewComponent } from './score/score-view/score-view.component';
 import { RegisterComponent } from './register/register-view/register.component';
 import { DeskConnectViewComponent } from './desk-connect/desk-connect-view/desk-connect-view.component';
+import { ManagerViewComponent } from '../manager/manager-view/manager-view.component';
 
 const routes: Routes = [
   {path: '', component: HomeViewComponent},
@@ -15,7 +16,8 @@ const routes: Routes = [
   {path: 'analytics', component: AnalyticsViewComponent},
   {path: 'score', component: ScoreViewComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'connect', component: DeskConnectViewComponent}
+  {path: 'connect', component: DeskConnectViewComponent},
+  {path: 'manager', component: ManagerViewComponent}
 ];
 
 @NgModule({

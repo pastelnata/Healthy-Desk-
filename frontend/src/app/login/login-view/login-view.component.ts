@@ -1,23 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginServiceService } from '../login.service';
+import { User } from '../../models/UserModel';
+
 @Component({
   selector: 'app-login-view',
   templateUrl: './login-view.component.html',
   styleUrl: './login-view.component.css'
 })
 
-export class LoginViewComponent {
+export class LoginViewComponent implements OnInit {
+  ngOnInit(): void {
+    //Loading user data (if existing)
+    this.loggedInUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  }
+
+
   username: string = '';
   password: string = '';
+  loggedInUser: User | null = null;
+
   constructor(private loginService: LoginServiceService) { }
 
   //Get data from login form
 
   //validate input
   logIn() {
-    this.loginService.logInUser(this.username, this.password);
-    this.clearInput();
-    this.checkIfLogedIn();
+    this.loginService.logIn(this.username, this.password).subscribe(
+      (response) => {
+        this.clearInput();
+        // success = login credentials are correct 
+        if (response.success) {
+          localStorage.setItem('isLoggedIn', 'true')
+
+          if(response.isManager) {
+            localStorage.setItem('isManager', 'true')
+            console.log("Manager is logged in");
+            alert("Login successful!");
+            window.location.href = 'http://localhost:4200/manager';
+          }
+          else {
+            console.log("User is logged in");
+            alert("Login successful!");
+            window.location.href = 'http://localhost:4200';
+          }
+        }
+      },
+      (error) => {
+        console.log("Error", error);
+        alert("Wrong credentials or user not found");
+      }
+    );
   }
 
   clearInput() {
@@ -25,13 +57,12 @@ export class LoginViewComponent {
     this.password = '';
   }
 
-  checkIfLogedIn() {
-    if(this.loginService.checkIfLogedIn()){
-      console.log("User is loged in");
-      window.location.href = 'http://localhost:4200';
-      alert("User is loged in");
-    }
+  isLoggedIn() {
+    return localStorage.getItem('isLoggedIn')==="true";
   }
-  //send into service
+
+  logOut() {
+    this.loginService.logOut();
+  }
 
 }
