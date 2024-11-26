@@ -27,9 +27,9 @@ body {
   justify-content: center;
   align-items: center;
   background: lightblue;
-  margin: 2vh 0vh 2vh 0vh;
+  margin: 2vh 0vh 12vh 0vh;
   max-width: 70vh;
-  height: 95vh;
+  
   border-radius: 30px;
   box-shadow: 0 0 2vh rgba(0, 0, 0, 2);
   overflow: hidden;
@@ -45,7 +45,7 @@ body {
   align-items: center;
   color: #333;
   text-align: center;
-  padding: 40px;
+  
 }
 
 .button {
@@ -63,7 +63,7 @@ body {
 
 .form-box {
   width: 90%;
-  padding: 3.5vh;
+  padding: 5vh 3.5vh 12vh 3.5vh;
   background: lightblue;
   display: flex;
   flex-direction: column;
