@@ -6,7 +6,6 @@ import { HomeService } from '../home/home.service';
 import { Profile } from '../models/profile.model';
 import { User } from '../models/UserModel';
 import { AlertService } from '../alert/alert.service';
-import { LoginServiceService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,6 @@ export class RegisterService {
     private http: HttpClient, 
     private homeService: HomeService,
     private alertService: AlertService,
-    private loginService: LoginServiceService,
     
   ){}
 
@@ -34,7 +32,7 @@ export class RegisterService {
     this.registerSittingProfile(standingUpTime / 60, standingUpTime % 60, height);
     this.registerStandingProfile(standingUpTime / 60 , standingUpTime % 60, height); 
     console.log(`NEW USER: ${JSON.stringify(newUser)}`);
-    this.loginService.registerUser(newUser);
+
     return this.http.post(`${this.apiUrl}/users`, newUser, { headers }).pipe(
       tap(response => console.log('User created successfully:', response)),
       catchError(error => {
@@ -42,7 +40,6 @@ export class RegisterService {
         return throwError(error);
       })
     );
-  
   }
 
   newUser(username: string, email: string, password: string, height: number, mot_lvl: 'low' | 'medium' | 'high', avg_standing_hrs: number, times_moved: number, calories_burned: number): User {
