@@ -30,7 +30,7 @@ export class LoginServiceService {
               return response;
             } 
             else {
-              localStorage.setItem('isLoggedIn', 'true');
+              this.userLoggedIn();
               localStorage.setItem('isManager', response.isManager ? 'true': 'false');
 
               this.loggedInUser = response.user;
@@ -42,7 +42,12 @@ export class LoginServiceService {
     );
 }
 
+  //Function that sets value to true if user is loged in in local storage
+  userLoggedIn(){
+    localStorage.setItem('isLoggedIn', 'true');
+  }
 
+  //log out removs loged in user from local storage ad clears additioal variables
   logOut() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('isManager');
@@ -51,6 +56,14 @@ export class LoginServiceService {
 
   getCurrentUser() {
     return this.loggedInUser;
+  }
+
+  //After register update local storage so user is loged in
+  //In the future we need to check if user is a manager or not
+  registerUser(user: User){
+    this.loggedInUser = user;
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.userLoggedIn();
   }
 }
 
