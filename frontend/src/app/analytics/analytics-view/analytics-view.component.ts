@@ -40,6 +40,9 @@ export class AnalyticsViewComponent {
           textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)'
         }
       },
+      credits: {
+        enabled: false,
+      },
       tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
       },
@@ -57,6 +60,32 @@ export class AnalyticsViewComponent {
             format: '<b>{point.name}</b>: {point.percentage:.1f} %'
           }
         }
+      },
+      responsive: {
+        rules: [{
+          condition: {
+            maxWidth: 600 // Adjust for smaller screens
+          },
+          chartOptions: {
+            chart: {
+              height: '60%' // Resize chart for small screens
+            },
+            title: {
+              style: {
+                fontSize: '18px' // Adjust title size for small screens
+              }
+            },
+            plotOptions: {
+              pie: {
+                dataLabels: {
+                  style: {
+                    fontSize: '10px' // Adjust labels
+                  }
+                }
+              }
+            }
+          }
+        }]
       },
       series: [
         {
