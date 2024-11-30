@@ -28,11 +28,12 @@ export class DeskApiService {
     return this.http.get<Desk>(deskUrl);
   }
 
-  getDeskPosition(id: string): Observable<number> {
+  getDeskPosition(): Observable<number> {
+    const id = this.getConnectedDeskId();
     return this.http.get<{ position_mm: number }>(`${this.apiUrl}/${id}/state`, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     }).pipe(
-      map(response => response.position_mm),
+      map(response => response.position_mm / 10),
       catchError((error) => {
         console.error("Error getting desk position", error);
         throw error;
