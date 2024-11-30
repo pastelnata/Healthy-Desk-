@@ -1,16 +1,20 @@
-<div class="connect-button-area">
-    <button class="connect-button" (click)="loadDesksAndInfos()">load available desks</button>
-</div>
-
-<div class="desks-area">
-    <div class="loading-circle" *ngIf="isLoading">
-        <mat-spinner></mat-spinner>
+<body>
+    <div class="connect-button-area">
+        <button class="connect-button" (click)="loadDesksAndInfos()">load available desks</button>
     </div>
-    <div class="desk-details" *ngFor="let deskInfos of desksInfos; let id as index">
-        <h3>{{ deskInfos.name }}</h3>
-        <p>Manufacturer: {{ deskInfos.manufacturer }}</p>
-        <p>Current position: {{ deskInfos.position }}</p>
-        <p>Status: {{ deskInfos.status }}</p>
-        <button class="connect-button" (click)="connectToDesk(id.id)">Connect</button>
+    
+    <div class="desks-area">
+        <div class="loading-circle" *ngIf="isLoading">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div class="container">
+            <div class="desk-details" *ngFor="let deskInfos of desksInfos; let id as index">
+                <h3>{{ deskInfos.name }}</h3>
+                <p>Manufacturer: {{ deskInfos.manufacturer }}</p>
+                <p>Current position: {{ deskInfos.position }}</p>
+                <p>Status: {{ deskInfos.status }}</p>
+                <button class="connect-button" (click)="connectToDesk(id.id)">Connect</button>
+            </div>
+        </div>
     </div>
-</div>
+</body>
