@@ -12,7 +12,7 @@
     "test": "ng test",
     "serve:ssr:Healthy-Desk-": "node dist/Healthy-Desk-/server/server.mjs",
     "dev": "ts-node-dev --poll ./src/index.ts",
-    "start:backend": "npm run build:backend && node backend/dist/index.js && python desk-api.py"
+    "start:backend": "npm run build:backend && node backend/dist/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -34,6 +34,7 @@
     "express": "^4.21.1",
     "highcharts": "^11.4.8",
     "pg": "^8.13.1",
+    "python3": "^0.0.1",
     "sequelize": "^6.37.5",
     "zone.js": "^0.14.10"
   },

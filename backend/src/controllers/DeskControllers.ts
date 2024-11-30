@@ -1,5 +1,4 @@
-
-import Desk from "../models/DeskModel";
+/*import Desk from "../models/DeskModel";
 import { DeskApiService } from "../services/DeskServices";
 
 class DeskController {
@@ -29,4 +28,4 @@ class DeskController {
     }
 }
 
-export default DeskController;
+export default DeskController;*/

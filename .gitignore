@@ -52,3 +52,42 @@ Thumbs.db
 # Angular
 .angular
 
+
+# git ignore for python simulator
+# Byte-compiled files
+/desk-simulator/__pycache__/
+/desk-simulator/*.py[cod]
+/desk-simulator/*$py.class
+
+# Virtual environment directories
+/desk-simulator/env/
+/desk-simulator/.env/
+
+# Distribution / packaging
+/desk-simulator/build/
+/desk-simulator/dist/
+
+# pyenv
+/desk-simulator/.python-version
+
+# MyPy cache
+/desk-simulator/.mypy_cache/
+
+# Logs and temporary files
+/desk-simulator/*.log
+/desk-simulator/*.tmp
+/desk-simulator/*.temp
+/desk-simulator/*.bak
+/desk-simulator/*.swp
+/desk-simulator/*.swo
+/desk-simulator/.DS_Store
+/desk-simulator/*.~undo-tree~
+
+# IDE-specific files
+/desk-simulator/.idea/
+/desk-simulator/*.sublime-project
+/desk-simulator/*.sublime-workspace
+
+# System-specific files
+/desk-simulator/.DS_Store
+/desk-simulator/Thumbs.db

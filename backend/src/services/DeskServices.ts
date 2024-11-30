@@ -1,4 +1,4 @@
-import axios from 'axios';
+/* import axios from 'axios';
 import Desk from '../models/DeskModel';
 
 export class DeskApiService {
@@ -30,4 +30,4 @@ export class DeskApiService {
             throw error;
         }
     }
-}
+}*/

@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { Desk } from '../models/DeskModel';
+import { error } from 'highcharts';
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeskApiService {
 
-  private conectedDeskId: string = '';
+  private connectedDeskId: string = '';
 
-  private apiUrl = 'http://localhost:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
+  private apiUrl = 'http://localhost:8000/api/v2/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
 
  //  private apiUrl = 'http://localhost:3000/api/desks'
 
@@ -26,20 +28,30 @@ export class DeskApiService {
     return this.http.get<Desk>(deskUrl);
   }
 
-  updateDeskPosition(position: number): Observable<any> {
-    const conectedDeskUrl = `http://127.0.0.1:8000/api/v1/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks/cd:fb:1a:53:fb:e6`;
-    // if(this.conectedDeskId === '') {
-    //   alert("No desk connected");
-    // }
-    this.getConectedDeskId();
-    // const conectedDeskUrl = `${this.apiUrl}/${this.conectedDeskId}`;
-    const body = { position: position * 10 };
-  
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  
-    return this.http.put<any>(conectedDeskUrl, body, { headers });
+  getDeskPosition(id: string): Observable<number> {
+    return this.http.get<{ position_mm: number }>(`${this.apiUrl}/${id}/state`, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    }).pipe(
+      map(response => response.position_mm),
+      catchError((error) => {
+        console.error("Error getting desk position", error);
+        throw error;
+      })
+    );
+  }
+
+  updateDeskPosition(id: string, position: number): Observable<any> {
+    const position_mm = position * 10;
+    const data = { position_mm: position_mm };
+    console.log("Updating desk position", data);
+    return this.http.put(`${this.apiUrl}/${id}/state`, data, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    }).pipe(
+      catchError((error) => {
+        console.log("Error updating desk position", error);
+        throw error;
+      })
+    );
   }
   
   
@@ -47,22 +59,22 @@ export class DeskApiService {
   
   }
 
-  getConectedDeskId() {
-    console.log(this.conectedDeskId);
-    return this.conectedDeskId;
+  getConnectedDeskId() {
+    this.connectedDeskId= localStorage.getItem('deskId') || '';
+    if(this.connectedDeskId == '') {
+      alert("No desk connected");
+    }
+    console.log("Connected to:", this.connectedDeskId);
+    return this.connectedDeskId;
   }
 
   connectToDesk(id: string) {
-    this.conectedDeskId = id;
-    alert("connected to desk with id: " + this.conectedDeskId);
-    // this.saveToLocalStorage(this.conectedDeskId);
+    this.connectedDeskId = id;
+    localStorage.setItem('deskId', id)
+    alert("connected to desk with id: " + this.connectedDeskId);
   }
 
-  // saveToLocalStorage(id: string){
-  //   localStorage.setItem('deskId', id);
-  // }
-
-  // loadfROmLocalStorage(){
+  // loadFromLocalStorage(){
   //   return localStorage.getItem('deskId');
   // }
 }

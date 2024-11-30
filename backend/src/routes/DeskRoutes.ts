@@ -1,4 +1,4 @@
-import express from 'express';
+/*import express from 'express';
 import DeskController from '../controllers/DeskControllers';
 import { DeskApiService } from '../services/DeskServices';
 
@@ -29,4 +29,4 @@ deskRoutes.get('/desks/:deskId', async (req, res) => {
     }
 });
 
-export default deskRoutes;
+export default deskRoutes;*/

@@ -38,9 +38,9 @@ export class HomeViewComponent implements OnInit {
   //   console.log("updateDeskHeight is beeing caled with parameters: " + this.curDeskHeight);
   // }
 
-  updateDeskHeight() {
+  async updateDeskHeight() {
     console.log('Desk height:', this.curDeskHeight); // Debugging line
-    this.apiDeskService.updateDeskPosition(this.curDeskHeight).subscribe({
+    await this.apiDeskService.updateDeskPosition(this.apiDeskService.getConnectedDeskId(), this.curDeskHeight).subscribe({
       next: (response) => {
         console.log('Desk position updated successfully:', response);
       },
