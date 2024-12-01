@@ -1,4 +1,4 @@
-class Desk {
+/*class Desk {
     private id!: string;
     private name!: string;
     private manufacturer!: string;
@@ -7,4 +7,4 @@ class Desk {
     private status!: string;
 }
 
-export default Desk;
+export default Desk;*/

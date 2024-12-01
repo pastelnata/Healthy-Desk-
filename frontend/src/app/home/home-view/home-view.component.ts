@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../home.service';
 import { Profile } from '../../models/profile.model';
 import { DeskApiService } from '../../services/desk-api.service';
@@ -7,10 +7,15 @@ import { Data } from '@angular/router';
 @Component({
   selector: 'app-home-view',
   templateUrl: './home-view.component.html',
-  styleUrls: ['./home-view.component.css']
+  styleUrls: ['./home-view.component.css'],
 })
 export class HomeViewComponent implements OnInit {
-  constructor(private homeService: HomeService, private apiDeskService: DeskApiService) {}
+  constructor(
+    private homeService: HomeService,
+    private apiDeskService: DeskApiService
+  ) {
+    this.getDeskPosition();
+  }
 
   profileId: string = '';
   curDeskHeight: number = 68;
@@ -19,7 +24,7 @@ export class HomeViewComponent implements OnInit {
   hours!: number;
   minutes!: number;
   profiles!: Profile[];
-  motivationLevel: string = ''; 
+  motivationLevel: string = '';
   isFormVisible: boolean = false;
 
   private intervalId: any;
@@ -33,35 +38,48 @@ export class HomeViewComponent implements OnInit {
     this.profileId = this.homeService.profileId;
   }
 
-  // updateDeskHeight(){
-  //   this.apiDeskService.updateDeskPosition(this.curDeskHeight).subscribe();
-  //   console.log("updateDeskHeight is beeing caled with parameters: " + this.curDeskHeight);
-  // }
-
-  updateDeskHeight() {
-    console.log('Desk height:', this.curDeskHeight); // Debugging line
-    this.apiDeskService.updateDeskPosition(this.curDeskHeight).subscribe({
+  getDeskPosition() {
+    this.apiDeskService.getDeskPosition().subscribe({
       next: (response) => {
-        console.log('Desk position updated successfully:', response);
+        this.curDeskHeight = response;
       },
       error: (error) => {
-        console.error('Failed to update desk position:', error);
-      }
+        console.error('Failed to get desk position:', error);
+      },
     });
   }
 
   //Desk height control button
 
+  async updateDeskHeight() {
+    this.curDeskHeight = parseFloat(this.curDeskHeight.toFixed(1));
+    console.log('Desk height:', this.curDeskHeight); // Debugging line
+    await this.apiDeskService
+      .updateDeskPosition(
+        this.apiDeskService.getConnectedDeskId(),
+        this.curDeskHeight
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Desk position updated successfully:', response);
+        },
+        error: (error) => {
+          console.error('Failed to update desk position:', error);
+        },
+      });
+  }
+
   increaseHeight() {
     if (this.curDeskHeight < 132) {
-      this.curDeskHeight += 1;
+      this.curDeskHeight += 0.1;
       this.updateDeskHeight();
     }
   }
 
   decreaseHeight() {
     if (this.curDeskHeight > 68) {
-      this.curDeskHeight -= 1;
+      this.curDeskHeight -= 0.1;
+      this.updateDeskHeight();
     }
   }
 
@@ -120,7 +138,7 @@ export class HomeViewComponent implements OnInit {
   saveProfile() {
     const time = `${this.hours}h ${this.minutes}m`;
 
-    if(this.profileId === '') {
+    if (this.profileId === '') {
       if (this.profileTitle === '') {
         this.profileTitle = 'No Title';
       }
@@ -135,10 +153,8 @@ export class HomeViewComponent implements OnInit {
       this.profiles.push(newProfile);
       this.clearForm();
       this.isFormVisible = false;
-    } 
-    else 
-    {
-      this.profiles.forEach(profile => {
+    } else {
+      this.profiles.forEach((profile) => {
         if (profile.profileId === this.profileId) {
           profile.title = this.profileTitle;
           profile.deskHeight = this.height;
@@ -146,10 +162,10 @@ export class HomeViewComponent implements OnInit {
         }
         this.clearForm();
         this.isFormVisible = false;
-      })
+      });
     }
   }
-  
+
   //Edit profile
 
   editProfile(id: number) {
@@ -161,7 +177,6 @@ export class HomeViewComponent implements OnInit {
     this.minutes = this.homeService.minutes;
     this.profileId = profile.profileId;
   }
-
 
   clearForm() {
     this.profileId = '';
