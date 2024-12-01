@@ -41,7 +41,8 @@ export class DeskApiService {
     );
   }
 
-  updateDeskPosition(id: string, position: number): Observable<any> {
+  updateDeskPosition(position: number): Observable<any> {
+    const id = this.getConnectedDeskId();
     const position_mm = position * 10;
     const data = { position_mm: position_mm };
     console.log("Updating desk position", data);
