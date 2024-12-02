@@ -38,7 +38,7 @@ class UserController {
                 return res.status(401).json({ success: false, message: 'Wrong login credentials' });
             }
 
-            const isManager = (username === "user2");
+            const isManager = (userData.constructor.name === 'Manager');
             return res.status(200).json({ success: true, user: userData, isManager });
             
         } catch (error) {

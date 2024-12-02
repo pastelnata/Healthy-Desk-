@@ -1,4 +1,4 @@
-import { User } from "../models/UserModel";
+import { Manager, User } from "../models/UserModel";
 
 class UserService {
     static async getUsers() {
@@ -16,10 +16,14 @@ class UserService {
     static async loginUser(username: string, password: string) {
         try {
             const user = await User.findOne({ where: { username, password } });
-    
             if (!user) {
-                console.log('User not found or invalid credentials');
-                return null;
+                const manager = await Manager.findOne({ where: { username, password }})
+                if(!manager) {
+                    console.log('User not found or invalid credentials');
+                    return null;
+                }
+                console.log('Manager logged in:', manager.username);
+                return manager;
             }
             console.log('User logged in:', user.username);
             return user;
