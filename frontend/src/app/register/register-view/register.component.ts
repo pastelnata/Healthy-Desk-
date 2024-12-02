@@ -16,15 +16,15 @@ export class RegisterComponent {
   height: number = 0;
   hours: number = 0;
   minutes: number = 0;
-  mot_lvl!: 'low';
+  mot_lvl!: 'low' | 'medium' | 'high';
 
   constructor(private homeService: HomeService, private router: Router, private registerService: RegisterService) {}
   validateHours() {
-    this.homeService.validateHours();
+    this.homeService.validateHours(this.hours);
   }
 
   validateMinutes() {
-    this.homeService.validateMinutes();
+    this.homeService.validateMinutes(this.minutes);
   }
 
   register(): void {
@@ -33,6 +33,7 @@ export class RegisterComponent {
     if (isFilled === true) {
       let validHeight: boolean = this.validateUserHeight();
       if (validHeight === false) {
+        alert('Please enter a valid height');
         return;
       } else {
         this.registerService.registerUser(this.username, this.email, this.password, this.height, this.mot_lvl, 0, 0, 0).subscribe(response => {

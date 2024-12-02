@@ -15,8 +15,8 @@ CREATE TABLE Profile (
     userid INT NOT NULL,
     title VARCHAR(255),
     deskHeight INT NOT NULL,
-    timer_standing INT NOT NULL,
-    timer_sitting INT NOT NULL,
+    timer_standing INT,
+    timer_sitting INT,
     FOREIGN KEY (userid) REFERENCES "User"(userid)
 );
 

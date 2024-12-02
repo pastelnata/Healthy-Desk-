@@ -10,19 +10,23 @@ export class AlertService {
   
   apiUrl = 'http://192.168.0.104/';
   
-  motivationLevel: string = 'low';
-  standingUpTime: number = 0;
+  // motivationLevel: string = 'low';
 
-  calcStandingTime(mot_lvl: string) {
+  calcTimers(mot_lvl: string): {standingUpTime: number, sittingTime: number} {
+    let standingUpTime: number = 0;
+    let sittingTime: number = 0;
+    
     if (mot_lvl === 'low') {
-      this.standingUpTime =180;
+      sittingTime = 10;
+      standingUpTime = 180;
     } else if (mot_lvl === 'medium') {
-      this.standingUpTime = 120;
+      sittingTime = 20;
+      standingUpTime = 120;
     } else if (mot_lvl === 'high') {
-      this.standingUpTime = 60;
+      sittingTime = 30;
+      standingUpTime = 60;
     }
-
-  return this.standingUpTime;
+    return {standingUpTime, sittingTime};
   }
 
   sendAlert(param: string) {
