@@ -31,7 +31,7 @@
                     <input id="height-slider" [(ngModel)]="height" type="range" min="68" max="132" step="1" />
                 </div>
                 
-                <p id="stand-every">Change desk height to <span class="height-value">{{height}}cm </span> every:</p>
+                <p class="stand">Change desk height to <span class="height-value">{{height}}cm </span> every:</p>
                 <form id="timer-form">
                     <div class="time">
                         <label for="hours">Hours</label>
@@ -44,19 +44,47 @@
                         [(ngModel)]="minutes" (ngModelChange)="validateMinutes()"/>
                     </div>
                 </form>
+                <p class="stand">Stand for:</p>
+                <form id="timer-form">
+                    <div class="time">
+                        <label for="hours">Hours</label>
+                        <input id="hours" name="hoursStanding" type="number" min="0" max="23"
+                        [(ngModel)]="hoursStanding" (ngModelChange)="validateHours()"/>
+                    </div>
+                    <div class="time">
+                        <label for="minutes">Minutes</label>
+                        <input id="minutes" name="minutesStanding" type="number" min="0" max="59" 
+                        [(ngModel)]="minutesStanding" (ngModelChange)="validateMinutes()"/>
+                    </div>
+                </form>
                 <button class="button" id="save-profile-button" (click)="saveProfile()">Save</button>
             </div>
         </div>
-        <div id="user-profiles">
-            <div *ngFor="let profile of profiles; let i = index" class="profile">
-                <div id="title-and-button">
-                    <h6>{{ profile.title }}</h6>
-                    <button class="delete-button" (click)="removeProfile(i)">x</button>
+        <div class="profiles-container">
+            <h5 class="profile-type-text">Default profiles</h5>
+            <div class="user-profiles">
+                <div *ngFor="let profile of defaultProfiles; let i = index" class="profile" [class.selected]="profile.selected" (click)="profileSelected(profile)">
+                    <div class="title-and-button">
+                        <h6>{{ profile.title }}</h6>
+                        <button class="delete-button" (click)="removeProfile(i, 'default'); $event.stopPropagation()">x</button>
+                    </div>
+                    <p>Height: {{ profile.deskHeight }}cm</p>
+                    <button class="button" (click)="editProfile(i); $event.stopPropagation()">Edit</button>
                 </div>
-                <p>Height: {{ profile.deskHeight }}cm</p>
-                <p>Time: {{ profile.time }}</p>
-                <p>Motivation level: {{ motivationLevel }}</p>
-                <button class="button" (click)="editProfile(i)">Edit</button>
+            </div>
+            <h5 class="profile-type-text">Profiles with timer</h5>
+            <div class="user-profiles">
+                <div *ngFor="let profile of profiles; let i = index" class="profile" 
+                [class.selected]="profile.selected"  (click)="profileSelected(profile)">
+                    <div class="title-and-button">
+                        <h6>{{ profile.title }}</h6>
+                        <button class="delete-button" (click)="removeProfile(i, 'timed'); $event.stopPropagation()">x</button>
+                    </div>
+                    <p>Height: {{ profile.deskHeight }}cm</p>
+                    <p>Desk rises every: {{ profile.timer_sitting }}</p>
+                    <p>Stand for: {{ profile.timer_standing }}</p>
+                    <button class="button" (click)="editProfile(i); $event.stopPropagation()">Edit</button>
+                </div>
             </div>
         </div>
     </section>

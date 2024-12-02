@@ -30,13 +30,13 @@ Profile.init(
             allowNull: false,
         },
         timer_standing: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         timer_sitting: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
+            type: DataTypes.STRING,
+            allowNull: true,
+        }
     },
     {
         sequelize,

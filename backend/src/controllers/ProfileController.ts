@@ -14,8 +14,9 @@ class ProfileController {
 
     async createProfile (req: Request, res: Response) {
         try {
-            const { userid, title, deskHeight, timer_sitting  } = req.body;
-            const profiles = await ProfileServices.createProfile(userid, title, deskHeight, timer_sitting);
+            console.log('Received request..', req.body);
+            const { userid, title, deskHeight, timer_standing, timer_sitting  } = req.body;
+            const profiles = await ProfileServices.createProfile(userid, title, deskHeight, timer_standing, timer_sitting);
             res.json(profiles);
         } catch (error) {
             console.error('Error fetching profiles:', error);
