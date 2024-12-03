@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { User } from '../models/UserModel';
 import { response } from 'express';
 import { map, Observable, retry } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,20 +23,19 @@ export class LoginServiceService {
 
   //Send user data to database
   //Return if user is in database and if credentials are correct
-  logIn(username: string, password: string): Observable<{ success: boolean, user?: any, isManager: boolean }> {
+  logIn(username: string, password: string): Observable<{success: boolean, token: string}> {
     const body = { username, password };
 
-    return this.http.post<{ success: boolean, user?: any, isManager: boolean }>(`${this.apiUrl}/user`, body).pipe(
+    return this.http.post<{success: boolean, token: string}>(`${this.apiUrl}/user`, body).pipe(
         map(response => {
-            if (!response.success) {
+            if (!response || !response.token) {
               return response;
             } 
             else {
-              localStorage.setItem('isLoggedIn', 'true');
-              localStorage.setItem('isManager', response.isManager ? 'true': 'false');
-
-              this.loggedInUser = response.user;
-              localStorage.setItem('currentUser', JSON.stringify(response.user));
+              // Token contains managerid/userid, username, email, isManager bool.
+              // To get more user info for frontend, search for it in the database with the managerid/userid.
+              console.log(response.token);
+              localStorage.setItem('token', response.token);
 
               return response;
             }
@@ -44,13 +45,57 @@ export class LoginServiceService {
 
 
   logOut() {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('isManager');
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
   }
 
-  getCurrentUser() {
-    return this.loggedInUser;
+  isLoggedIn() {
+    // Checks if the user token is in localStorage (which means that user is logged in)
+    const token = localStorage.getItem('token')
+    if(token) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  
+  // Decodes the token to receive username. Returns it in a string.
+  getCurrentUsername() {
+    const token = localStorage.getItem('token');
+    if(token) {
+      const decodedUser: any = jwtDecode(token);
+      return decodedUser.username;
+    }
+    else {
+      console.log("Error getting the username. Token is null.")
+      return null;
+    }
+  }
+
+  // Decodes the token to receive isManager. Returns it in a bool.
+  getIsManager() {
+    const token = localStorage.getItem('token');
+    if(token) {
+      const decodedUser: any = jwtDecode(token);
+      return decodedUser.isManager;
+    }
+    else {
+      console.log("Error getting isManager permissions. Token is null.")
+      return null;
+    }
+  }
+
+  // Decodes the token to receive email. Returns it in a string.
+  getEmail() {
+    const token = localStorage.getItem('token');
+    if(token) {
+      const decodedUser: any = jwtDecode(token);
+      return decodedUser.email;
+    }
+    else {
+      console.log("Error getting isManager permissions. Token is null.")
+      return null;
+    }
   }
 }
 

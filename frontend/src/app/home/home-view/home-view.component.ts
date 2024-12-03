@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../home.service';
 import { Profile } from '../../models/ProfileModel';
 import { DeskApiService } from '../../services/desk-api.service';
-import { Data } from '@angular/router';
 
 @Component({
   selector: 'app-home-view',
@@ -38,11 +37,27 @@ export class HomeViewComponent implements OnInit {
   private holdTime: number = 200;
 
   ngOnInit(): void {
+    // Loads the profiles stored in the db
+    this.homeService.getAllProfiles().subscribe(
+      (response) => {
+        this.homeService.profiles.forEach((profile) => {
+          if (this.isDefaultProfile()) {
+            this.defaultProfiles.push(profile);
+          } else {
+            this.profiles.push(profile);
+          }
+        })
+        console.log('Profiles loaded successfully:', this.homeService.profiles);
+      },
+      (error) => {
+        console.error('Error loading profiles:', error);
+      }
+    );
+
     this.hours = this.homeService.hours;
     this.minutes = this.homeService.minutes;
     this.hoursStanding = this.homeService.hoursStanding;
     this.minutesStanding = this.homeService.minutesStanding;
-    this.profiles = this.homeService.profiles;
     this.motivationLevel = this.homeService.motivationLevel;
     this.profileId = this.homeService.profileId;
     this.defaultProfiles = this.homeService.defaultProfiles;
@@ -222,6 +237,13 @@ export class HomeViewComponent implements OnInit {
       newProfile.deskHeight,
       newProfile.timer_sitting ?? '',
       newProfile.timer_standing ?? ''
+    ).subscribe(
+      (response) => {
+        console.log('Profile created successfully:', response);
+      },
+      (error) => {
+        console.error('Error creating profile:', error);
+      }
     );
     return newProfile;
   }
@@ -349,9 +371,20 @@ export class HomeViewComponent implements OnInit {
   }
 
   removeProfile(index: number, list: 'default' | 'timed') {
+    
     if (list === 'timed') {
+      // Remove from the DB
+      // needs another way of getting the profile id (this one doesnt work)
+      /*if(this.profiles[index].profileId?.toString) {
+        this.homeService.deleteProfile(this.profiles[index].profileId)
+      }*/
+      // Remove from front end
       this.profiles.splice(index, 1);
     } else if (list === 'default') {
+      // needs another way of getting the profile id (this one doesnt work)
+      /*if(this.defaultProfiles[index].profileId?.toString) {
+        this.homeService.deleteProfile(this.defaultProfiles[index].profileId)
+      }*/
       this.defaultProfiles.splice(index, 1);
     } else {
       alert('Error removing profile');

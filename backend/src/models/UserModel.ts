@@ -1,6 +1,7 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 import sequelize from "../config/sequelize";
 import Profile from "./ProfileModel";
+import jwt from "jsonwebtoken";
 
 interface IUser {
     username: string;
@@ -18,6 +19,14 @@ class User extends Model implements IUser {
     public avg_standing_hrs!: number;
     public times_moved!: number;
     public calories_burned!: number;
+
+    public generateToken(): string {
+        console.log("Generating token for user:", this.email);
+        const payload = { userid: this.userid, email: this.email, username: this.username, isManager: false };
+        const secret = "123456";
+        console.log("Token data:", JSON.stringify(payload));
+        return jwt.sign(payload, secret);
+    }
 }
 
 User.init(
@@ -74,6 +83,13 @@ class Manager extends Model implements IUser {
     username!: string;
     email!: string;
     password!: string;
+
+    public generateToken(): string {
+        console.log("Generating token for user:", this.email);
+        const payload = { userid: this.managerid, email: this.email, username: this.username, isManager: true };
+        const secret = "123456";
+        return jwt.sign(payload, secret);
+    }
 }
 
 Manager.init(

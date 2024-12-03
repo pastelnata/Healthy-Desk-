@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { HomeService } from '../home/home.service';
 import { Profile } from '../models/ProfileModel';
 import { User } from '../models/UserModel';
@@ -60,13 +60,18 @@ export class RegisterService {
 
     console.log(`NEW USER: ${JSON.stringify(newUser)}`);
 
-    return this.http.post(`${this.apiUrl}/users`, newUser, { headers }).pipe(
-      tap((response) => console.log('User created successfully:', response)),
+    return this.http.post<{ success: boolean, token: string }>(`${this.apiUrl}/users`, newUser, { headers }).pipe(
+      map((response) => {
+        console.log('User created successfully:', response.token);
+        localStorage.setItem('token', response.token);
+        return response;
+      }),
       catchError((error) => {
         console.error('Error creating user:', error);
-        return throwError(error);
+        return throwError(() => error);
       })
     );
+    
   }
 
   newUser(

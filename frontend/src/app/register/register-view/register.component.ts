@@ -37,7 +37,7 @@ export class RegisterComponent {
         return;
       } else {
         this.registerService.registerUser(this.username, this.email, this.password, this.height, this.mot_lvl, 0, 0, 0).subscribe(response => {
-          console.log('User registered:', response);
+          console.log('User registered:', response.token);
         }, error => {
           console.error('Error registering user:', error);
         });

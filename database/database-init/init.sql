@@ -10,17 +10,17 @@ CREATE TABLE "User" (
     calories_burned INT
     );
 
-CREATE TABLE Profile (
+CREATE TABLE "Profile" (
     profileid SERIAL PRIMARY KEY,
     userid INT NOT NULL,
     title VARCHAR(255),
-    deskHeight INT NOT NULL,
-    timer_standing INT,
-    timer_sitting INT,
+    "deskHeight" INT NOT NULL,
+    timer_standing VARCHAR(255),
+    timer_sitting VARCHAR(255),
     FOREIGN KEY (userid) REFERENCES "User"(userid)
 );
 
-CREATE TABLE Manager (
+CREATE TABLE "Manager" (
     managerid SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
@@ -28,5 +28,8 @@ CREATE TABLE Manager (
 );
 
 INSERT INTO "User" (username, "password", email, height, mot_lvl) VALUES 
-    ('user1', 'password1', 'user1@gmail.com', 180, 'low'),
-    ('user2', 'password2', 'user2@gmail.com', 150, 'low');
+    ('user1', 'password1', 'user1@gmail.com', 180, 'low');
+    
+
+INSERT INTO "Manager" (email, username, "password") VALUES 
+    ('user2@gmail.com', 'user2', 'password2');
