@@ -20,9 +20,8 @@ profileRoutes.post('/profiles', async (req: Request, res: Response) => {
 
 profileRoutes.delete('/profiles/:profileid', async (req: Request, res: Response) => {
     try {
+        console.log('Deleting...:', req.body);
         await profileController.deleteProfile(req, res);
-        console.log('Profile deletion process completed.');
-        res.status(200).send({ message: 'Profile ${profileid} deleted.' });
     } catch (error) {
         console.error('Error deleting the profile:', error);
         res.status(500).send(error);

@@ -28,13 +28,16 @@ class ProfileController {
         try {
             const { profileid } = req.params;
             const deleted = await ProfileServices.deleteProfile(profileid);
-            res.send(deleted)
+            if (deleted) {
+                res.status(200).send({ message: `Profile ${profileid} deleted successfully.` });
+            } else {
+                res.status(404).send({ message: `Profile ${profileid} not found.` });
+            }
         }
         catch (error) {
             console.error('Error deleting profile:', error);
             res.send(error);
         }
-
     }
 }
 

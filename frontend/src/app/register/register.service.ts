@@ -144,8 +144,7 @@ export class RegisterService {
       deskHeight: Math.round(userHeight * 0.61),
       timer_sitting: timeStanding,
       timer_standing: timeSitting,
-      userId: 3,
-      profileId: Date.now().toString(),
+      userId: 3
     };
 
     this.homeService.profiles.push(newProfile);
@@ -163,8 +162,7 @@ export class RegisterService {
     const newProfile: Profile = {
       title: 'Optimal Sitting Height',
       deskHeight: Math.round(userHeight * 0.43),
-      userId: 3,
-      profileId: Date.now().toString(),
+      userId: 3
     };
 
     this.homeService.defaultProfiles.push(newProfile);
@@ -180,8 +178,7 @@ export class RegisterService {
     const newProfile: Profile = {
       title: 'Optimal Standing Height',
       deskHeight: Math.round(userHeight * 0.61),
-      userId: 3,
-      profileId: Date.now().toString(),
+      userId: 3
     };
 
     this.homeService.defaultProfiles.push(newProfile);
