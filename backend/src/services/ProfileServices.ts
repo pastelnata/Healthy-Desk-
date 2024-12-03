@@ -34,15 +34,18 @@ class ProfileServices {
     }
   }
 
+  static async updateProfile() {
+    
+  }
+
   static async deleteProfile(profileid: string) {
     try {
+      console.log('Deleting profile with ID:', profileid);
       const result = await Profile.destroy({
         where: {
           profileid: profileid,
         },
       });
-
-      // Return true if the profile was deleted, false if not
       return result > 0;
   } catch (error) {
       console.error('Error deleting profile:', error);

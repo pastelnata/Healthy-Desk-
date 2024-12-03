@@ -60,18 +60,23 @@ export class RegisterService {
 
     console.log(`NEW USER: ${JSON.stringify(newUser)}`);
 
-    return this.http.post<{ success: boolean, token: string }>(`${this.apiUrl}/users`, newUser, { headers }).pipe(
-      map((response) => {
-        console.log('User created successfully:', response.token);
-        localStorage.setItem('token', response.token);
-        return response;
-      }),
-      catchError((error) => {
-        console.error('Error creating user:', error);
-        return throwError(() => error);
-      })
-    );
-    
+    return this.http
+      .post<{ success: boolean; token: string }>(
+        `${this.apiUrl}/users`,
+        newUser,
+        { headers }
+      )
+      .pipe(
+        map((response) => {
+          console.log('User created successfully:', response.token);
+          localStorage.setItem('token', response.token);
+          return response;
+        }),
+        catchError((error) => {
+          console.error('Error creating user:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   newUser(
@@ -100,6 +105,31 @@ export class RegisterService {
   }
 
   /* DEFAULT TIMER PROFILES */
+
+  addProfile(newProfile: Profile, list: 'default' | 'timed') {
+    this.homeService
+      .createProfile(
+        newProfile.userId,
+        newProfile.title,
+        newProfile.deskHeight,
+        newProfile.timer_sitting ?? '',
+        newProfile.timer_standing ?? ''
+      )
+      .subscribe({
+        next: (response) => {
+          newProfile.profileid = response.profileid;
+          if (list === 'default') {
+            this.homeService.defaultProfiles.push(newProfile);
+          } else if(list === 'timed') {
+            this.homeService.profiles.push(newProfile);
+          }
+          console.log('Profile created successfully:', response);
+        },
+        error: (error) => {
+          console.error('Error creating profile:', error);
+        },
+      });
+  }
 
   registerProfiles(userHeight: number) {
     console.log('standing up time', this.standingUpTime);
@@ -145,15 +175,9 @@ export class RegisterService {
       timer_sitting: timeStanding,
       timer_standing: timeSitting,
       userId: 3,
-      profileId: Date.now().toString(),
     };
 
-    this.homeService.profiles.push(newProfile);
-
-    this.homeService.profiles.forEach((profile) => {
-      console.log(profile);
-    });
-
+    this.addProfile(newProfile, 'timed');
     return newProfile;
   }
 
@@ -164,14 +188,9 @@ export class RegisterService {
       title: 'Optimal Sitting Height',
       deskHeight: Math.round(userHeight * 0.43),
       userId: 3,
-      profileId: Date.now().toString(),
     };
 
-    this.homeService.defaultProfiles.push(newProfile);
-
-    this.homeService.defaultProfiles.forEach((profile) => {
-      console.log(profile);
-    });
+    this.addProfile(newProfile, 'default');
 
     return newProfile;
   }
@@ -181,14 +200,9 @@ export class RegisterService {
       title: 'Optimal Standing Height',
       deskHeight: Math.round(userHeight * 0.61),
       userId: 3,
-      profileId: Date.now().toString(),
     };
 
-    this.homeService.defaultProfiles.push(newProfile);
-
-    this.homeService.defaultProfiles.forEach((profile) => {
-      console.log(profile);
-    });
+    this.addProfile(newProfile, 'default');
 
     return newProfile;
   }

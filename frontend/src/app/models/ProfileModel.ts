@@ -1,6 +1,6 @@
 export interface Profile {
   userId: number;
-  profileId?: string;
+  profileid?: number;
   title: string;
   deskHeight: number;
   timer_sitting?: string;

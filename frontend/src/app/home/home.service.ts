@@ -16,7 +16,7 @@ export class HomeService {
   motivationLevel!: string;
   profiles: Profile[] = [];
   defaultProfiles: Profile[] = [];
-  profileId: string = '';
+  profileid: string = '';
 
   apiUrl = 'http://localhost:3000/api';
 
@@ -38,7 +38,13 @@ export class HomeService {
     else return false;
   }
 
-  createProfile(userid: number, title: string, deskHeight: number, timer_sitting: string,timer_standing: string): Observable<any> {
+  createProfile(
+    userid: number,
+    title: string,
+    deskHeight: number,
+    timer_sitting: string,
+    timer_standing: string
+  ): Observable<any> {
     //this doesnt work for some reason
     const profileData = {
       userid,
@@ -47,10 +53,7 @@ export class HomeService {
       timer_sitting,
       timer_standing,
     };
-    console.log(
-      'Received request..',
-      JSON.stringify(profileData)
-    );
+    console.log('Received request..', JSON.stringify(profileData));
     return this.http.post(`${this.apiUrl}/profiles`, profileData).pipe(
       tap((response) => console.log('Profile created successfully:', response)),
       catchError((error) => {
@@ -60,30 +63,85 @@ export class HomeService {
     );
   }
 
-  deleteProfile(profileid: string): Observable<any> {
+  updateProfile(
+    profileid: number,
+    userid: number,
+    title: string,
+    deskHeight: number,
+    timer_sitting: string,
+    timer_standing: string
+  ): Observable<any> {
+    const profileData = {
+      userid,
+      title,
+      deskHeight,
+      timer_sitting,
+      timer_standing,
+    };
+    const url = `${this.apiUrl}/profiles/${profileid}`;
+    console.log('Received request to update profile with ID:', profileid);
+    return this.http.put(url, profileData).pipe(
+      tap((response) => console.log('Profile updated successfully:', response)),
+      catchError((error) => {
+        console.error('Error updating profile:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  deleteProfile(profileid: number): Observable<any> {
     const url = `${this.apiUrl}/profiles/${profileid}`;
     console.log('Received request to delete profile with ID:', profileid);
-    
+
     return this.http.delete(url).pipe(
-      tap(() => console.log(`Profile with ID ${profileid} deleted successfully.`)),
+      tap(() =>
+        console.log(`Profile with ID ${profileid} deleted successfully.`)
+      ),
       catchError((error) => {
         console.error('Error deleting profile:', error);
         return error;
       })
     );
   }
-  
 
-  getAllProfiles(): Observable<any> {
+  getAllProfiles(): Observable<Profile[]> {
     return this.http.get<Profile[]>(`${this.apiUrl}/profiles`).pipe(
-      tap((profiles) => {
-        this.profiles = profiles;
-        console.log('Profiles retrieved successfully:', profiles);
+      tap((response) => {
+        response.forEach((profile) => {
+          if (this.isDefaultProfile(profile)) {
+            this.defaultProfiles.push(profile);
+          } else {
+            this.profiles.push(profile);
+          }
+        });
       }),
       catchError((error) => {
-        console.error('Error getting profiles:', error);
-        return error;
+        console.error('Error fetching profiles:', error);
+        return throwError(error);
       })
     );
+  }
+
+  isDefaultProfile(profile: Profile) {
+    const { hours, minutes } = this.calcHrsMins(profile.timer_standing ?? '');
+    if (hours === 0 && minutes === 0) {
+      return true;
+    } else return false;
+  }
+
+  calcHrsMins(time: string): { hours: number; minutes: number } {
+    const timeFormat = /(\d+)h\s*(\d+)m/;
+    // checks if the time is in the correct format
+    const matches = time.match(timeFormat);
+    if (matches) {
+      // Extract hours and minutes from the matched groups
+      // the matched groups will be, for example: [ '1h 30m', '1', '30']
+      // 10 means that it is converting it to a decimal number
+      const hours = parseInt(matches[1], 10);
+      const minutes = parseInt(matches[2], 10);
+      // Converts to milliseconds
+      return { hours, minutes };
+    }
+    return { hours: 0, minutes: 0 };
   }
 }

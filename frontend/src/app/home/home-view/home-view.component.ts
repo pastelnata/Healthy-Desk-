@@ -16,7 +16,7 @@ export class HomeViewComponent implements OnInit {
     this.getDeskPosition();
   }
 
-  profileId: string = '';
+  profileid: string = '';
   curDeskHeight: number = 68;
   height: number = 68;
   profileTitle: string = '';
@@ -38,29 +38,22 @@ export class HomeViewComponent implements OnInit {
 
   ngOnInit(): void {
     // Loads the profiles stored in the db
-    this.homeService.getAllProfiles().subscribe(
-      (response) => {
-        this.homeService.profiles.forEach((profile) => {
-          if (this.isDefaultProfile()) {
-            this.defaultProfiles.push(profile);
-          } else {
-            this.profiles.push(profile);
-          }
-        })
+    this.homeService.getAllProfiles().subscribe({
+      next: (response: Profile[]) => {
         console.log('Profiles loaded successfully:', this.homeService.profiles);
+        this.defaultProfiles = this.homeService.defaultProfiles;
+        this.profiles = this.homeService.profiles;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error loading profiles:', error);
-      }
-    );
+      },
+    });
 
     this.hours = this.homeService.hours;
     this.minutes = this.homeService.minutes;
     this.hoursStanding = this.homeService.hoursStanding;
     this.minutesStanding = this.homeService.minutesStanding;
     this.motivationLevel = this.homeService.motivationLevel;
-    this.profileId = this.homeService.profileId;
-    this.defaultProfiles = this.homeService.defaultProfiles;
   }
 
   getDeskPosition() {
@@ -183,39 +176,23 @@ export class HomeViewComponent implements OnInit {
   /* CREATE PROFILE LOGIC */
 
   saveProfile() {
-    if (this.profileId === '' && this.isFormValid()) {
+    if(this.isFormValid()) {
       const newProfile = this.createProfile();
-      if (this.isDefaultProfile()) {
-        this.defaultProfiles.push(newProfile);
+      if (this.checkForDuplicateProfile(newProfile)) {
+        alert('Profile already exists');
+        return;
+      }
+      if (this.homeService.isDefaultProfile(newProfile)) {
+        this.homeService.defaultProfiles.push(newProfile);
       } else {
-        this.profiles.push(newProfile);
+        this.homeService.profiles.push(newProfile);
       }
 
       this.clearForm();
       this.isFormVisible = false;
-    } else {
-      this.profiles.forEach((profile) => {
-        if (profile.profileId === this.profileId) {
-          profile.title = this.profileTitle;
-          profile.deskHeight = this.height;
-          profile.timer_sitting = `${this.hours}h ${this.minutes}m`;
-        }
-        this.clearForm();
-        this.isFormVisible = false;
-      });
     }
   }
-
-  isDefaultProfile() {
-    if (
-      this.hours === 0 &&
-      this.minutes === 0 &&
-      this.hoursStanding === 0 &&
-      this.minutesStanding === 0
-    ) {
-      return true;
-    } else return false;
-  }
+  
 
   createProfile(): Profile {
     const time = `${this.hours}h ${this.minutes}m`;
@@ -231,21 +208,34 @@ export class HomeViewComponent implements OnInit {
       timer_standing: timeStanding,
     };
     console.log('Creating profile...');
-    this.homeService.createProfile(
-      newProfile.userId,
-      newProfile.title,
-      newProfile.deskHeight,
-      newProfile.timer_sitting ?? '',
-      newProfile.timer_standing ?? ''
-    ).subscribe(
-      (response) => {
-        console.log('Profile created successfully:', response);
-      },
-      (error) => {
-        console.error('Error creating profile:', error);
-      }
-    );
+    this.homeService
+      .createProfile(
+        newProfile.userId,
+        newProfile.title,
+        newProfile.deskHeight,
+        newProfile.timer_sitting ?? '',
+        newProfile.timer_standing ?? ''
+      )
+      .subscribe({
+        next: (response) => {
+          newProfile.profileid = response.profileid;
+          console.log('Profile created successfully:', response);
+        },
+        error: (error) => {
+          console.error('Error creating profile:', error);
+        },
+      });
     return newProfile;
+  }
+
+  checkForDuplicateProfile(newProfile: Profile): boolean {
+    return this.profiles.concat(this.defaultProfiles).some(profile =>
+      profile.userId === newProfile.userId &&
+      profile.title === newProfile.title &&
+      profile.deskHeight === newProfile.deskHeight &&
+      profile.timer_sitting === newProfile.timer_sitting &&
+      profile.timer_standing === newProfile.timer_standing
+    );
   }
 
   /* PROFILE SELECTION */
@@ -256,12 +246,12 @@ export class HomeViewComponent implements OnInit {
     //saved in local storage for now
     localStorage.setItem('profile', JSON.stringify(this.curProfile));
 
-     // Remove 'selected' class from all profiles
-     this.defaultProfiles.forEach(p => p.selected = false);
-     this.profiles.forEach(p => p.selected = false);
- 
-     // Add 'selected' class to the current profile
-     profile.selected = true;
+    // Remove 'selected' class from all profiles
+    this.defaultProfiles.forEach((p) => (p.selected = false));
+    this.profiles.forEach((p) => (p.selected = false));
+
+    // Add 'selected' class to the current profile
+    profile.selected = true;
 
     if (this.defaultProfiles.includes(profile)) {
       // Move the desk to the position of the default profile
@@ -283,23 +273,25 @@ export class HomeViewComponent implements OnInit {
   stopTimers() {
     // Clear any existing timers
     if (this.sittingTimer) {
-        clearTimeout(this.sittingTimer);
-        this.sittingTimer = null;
-        console.log('Stopped sitting timer');
-      }
-      if (this.standingTimer) {
-        clearTimeout(this.standingTimer);
-        this.standingTimer = null;
-        console.log('Stopped standing timer');
+      clearTimeout(this.sittingTimer);
+      this.sittingTimer = null;
+      console.log('Stopped sitting timer');
     }
-}
+    if (this.standingTimer) {
+      clearTimeout(this.standingTimer);
+      this.standingTimer = null;
+      console.log('Stopped standing timer');
+    }
+  }
 
   startSittingTimer() {
     try {
       this.isStanding = false;
-      const timerSitting = this.calculateTimer(
+      const { hours, minutes } = this.homeService.calcHrsMins(
         this.curProfile.timer_sitting ?? ''
       );
+      const timerSitting = (hours * 60 + minutes) * 60 * 1000;
+
       console.log('Starting sitting timer:', timerSitting);
       this.sittingTimer = setTimeout(() => {
         const standingProfile = this.curProfile;
@@ -316,9 +308,10 @@ export class HomeViewComponent implements OnInit {
   startStandingTimer() {
     try {
       this.isStanding = true;
-      const timerStanding = this.calculateTimer(
+      const { hours, minutes } = this.homeService.calcHrsMins(
         this.curProfile.timer_standing ?? ''
       );
+      const timerStanding = (hours * 60 + minutes) * 60 * 1000;
       console.log('Starting standing timer:', timerStanding);
       // calls the updateDeskHeight function after timer is over
       this.standingTimer = setTimeout(() => {
@@ -332,36 +325,43 @@ export class HomeViewComponent implements OnInit {
     }
   }
 
-  calculateTimer(time: string): number {
-    const timeFormat = /(\d+)h\s*(\d+)m/;
-    // checks if the time is in the correct format
-    const matches = time.match(timeFormat);
-    if (matches) {
-      // Extract hours and minutes from the matched groups
-      // the matched groups will be, for example: [ '1h 30m', '1', '30']
-      // 10 means that it is converting it to a decimal number
-      const hours = parseInt(matches[1], 10);
-      const minutes = parseInt(matches[2], 10);
-      // Converts to milliseconds
-      return (hours * 60 + minutes) * 60 * 1000;
-    }
-    return 0;
-  }
-
   /* EDIT & REMOVE PROFILE LOGIC */
 
   editProfile(id: number) {
-    this.isFormVisible = !this.isFormVisible;
+    this.isFormVisible = true;
     const profile = this.profiles[id];
-    this.profileTitle = profile.title;
-    this.height = profile.deskHeight;
-    this.hours = this.homeService.hours;
-    this.minutes = this.homeService.minutes;
-    this.profileId = profile.profileId ?? '';
+    this.homeService
+      .updateProfile(
+        Number(this.profileid),
+        profile.userId,
+        profile.title,
+        profile.deskHeight,
+        profile.timer_sitting ?? '',
+        profile.timer_standing ?? ''
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Profile updated successfully:', response);
+          const index = this.profiles.findIndex(
+            (profile) => profile.profileid === Number(this.profileid)
+          );
+          if (index !== -1) {
+            this.profiles[index] = {
+              ...profile,
+              profileid: Number(this.profileid),
+            };
+          }
+          this.clearForm();
+          this.isFormVisible = false;
+        },
+        error: (error) => {
+          console.error('Error updating profile:', error);
+        }
+      });
   }
 
   clearForm() {
-    this.profileId = '';
+    this.profileid = '';
     this.profileTitle = '';
     this.height = 68;
     this.hours = 0;
@@ -370,22 +370,34 @@ export class HomeViewComponent implements OnInit {
     this.minutesStanding = 0;
   }
 
-  removeProfile(index: number, list: 'default' | 'timed') {
-    
+  async removeProfile(index: number, list: 'default' | 'timed') {
+    console.log('Removing profile:', index);
+    console.log('Profile:', this.profiles[index]);
     if (list === 'timed') {
-      // Remove from the DB
-      // needs another way of getting the profile id (this one doesnt work)
-      /*if(this.profiles[index].profileId?.toString) {
-        this.homeService.deleteProfile(this.profiles[index].profileId)
-      }*/
-      // Remove from front end
-      this.profiles.splice(index, 1);
+      const profileid = this.profiles[index].profileid;
+      console.log('Profile ID:', profileid);
+      if (profileid !== undefined) {
+        await this.homeService.deleteProfile(profileid).subscribe({
+          next: () => {
+            this.profiles.splice(index, 1);
+          },
+          error: (error) => console.error('Error deleting profile:', error),
+        });
+      } else {
+        console.error('Profile ID is undefined');
+      }
     } else if (list === 'default') {
-      // needs another way of getting the profile id (this one doesnt work)
-      /*if(this.defaultProfiles[index].profileId?.toString) {
-        this.homeService.deleteProfile(this.defaultProfiles[index].profileId)
-      }*/
-      this.defaultProfiles.splice(index, 1);
+      const profileid = this.defaultProfiles[index].profileid;
+      console.log('Profile ID:', profileid);
+      if (profileid !== undefined) {
+        await this.homeService.deleteProfile(profileid).subscribe({
+          next: () => {},
+          error: (error) => console.error('Error deleting profile:', error),
+        });
+        this.defaultProfiles.splice(index, 1);
+      } else {
+        console.error('Profile ID is undefined');
+      }
     } else {
       alert('Error removing profile');
       console.error('Error removing profile');
