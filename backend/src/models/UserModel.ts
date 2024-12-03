@@ -19,6 +19,7 @@ class User extends Model implements IUser {
     public avg_standing_hrs!: number;
     public times_moved!: number;
     public calories_burned!: number;
+    public alert_streak!: number;
 
     public generateToken(): string {
         console.log("Generating token for user:", this.email);
@@ -69,6 +70,10 @@ User.init(
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
+        alert_streak: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        }
     },
     {
         sequelize,

@@ -11,5 +11,8 @@ export class StreakPopupViewComponent {
   onClose() {
     this.close.emit();
   }
+  
+
+
 }
 
