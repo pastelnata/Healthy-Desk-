@@ -97,6 +97,33 @@ export class LoginServiceService {
       return null;
     }
   }
+  // Decodes the token to receive Streak. Returns it in a string.
+
+  getStreak() {
+    const token = localStorage.getItem('token');
+    if(token) {
+      const decodedUser: any = jwtDecode(token);
+      return decodedUser.alert_streak;
+    }
+    else {
+      console.log("Error getting isManager permissions. Token is null.")
+      return null;
+    }
+  }
+
+  // Decodes the token to receive longest streak. Returns it in a string.
+  getLongestStreak() {
+      const token = localStorage.getItem('token');
+      if(token) {
+        const decodedUser: any = jwtDecode(token);
+        return decodedUser.longest_streak;
+      }
+      else {
+        console.log("Error getting isManager permissions. Token is null.")
+        return null;
+      }
+  }
+
 }
 
 
