@@ -8,7 +8,8 @@ CREATE TABLE "User" (
     avg_standing_hrs INT,
     times_moved INT,
     calories_burned INT,
-    alert_streak INT
+    alert_streak INT,
+    longest_streak INT
     );
 
 CREATE TABLE "Profile" (
@@ -28,8 +29,8 @@ CREATE TABLE "Manager" (
     "password" VARCHAR(255) NOT NULL
 );
 
-INSERT INTO "User" (username, "password", email, height, mot_lvl, alert_streak) VALUES 
-    ('user1', 'password1', 'user1@gmail.com', 180, 'low', 21);
+INSERT INTO "User" (username, "password", email, height, mot_lvl, alert_streak, longest_streak) VALUES 
+    ('user1', 'password1', 'user1@gmail.com', 180, 'low', 21, 32);
     
 
 INSERT INTO "Manager" (email, username, "password") VALUES 

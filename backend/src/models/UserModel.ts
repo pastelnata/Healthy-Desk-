@@ -20,10 +20,13 @@ class User extends Model implements IUser {
     public times_moved!: number;
     public calories_burned!: number;
     public alert_streak!: number;
+    public longest_streak!: number;
 
     public generateToken(): string {
         console.log("Generating token for user:", this.email);
-        const payload = { userid: this.userid, email: this.email, username: this.username, isManager: false };
+        const payload = { userid: this.userid, email: this.email, username: this.username, isManager: false,
+            alert_streak: this.alert_streak, longest_streak: this.longest_streak
+         };
         const secret = "123456";
         console.log("Token data:", JSON.stringify(payload));
         return jwt.sign(payload, secret);
@@ -73,6 +76,10 @@ User.init(
         alert_streak: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+        },
+        longest_streak: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     },
     {
