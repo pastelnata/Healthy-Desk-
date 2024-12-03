@@ -12,6 +12,11 @@ export class NavigationViewComponent {
   constructor(private loginService: LoginServiceService, private router: Router) {}
   
   isLoggedIn: boolean = false
+  currentStreak: number = 0
+
+  ngOnInit(): void {
+    this.currentStreak = this.loginService.getStreak();
+  }
 
   @Output() toggleAccountVisibility = new EventEmitter<void>();
   @Output() toggleeStreakVisibility = new EventEmitter<void>();

@@ -11,7 +11,7 @@
                 <a href="analytics" mat-button>Analytics</a>
                 <div class="profileSection">
                     <div class="border"  (click)="streakClicked()">    
-                        <span id="numberStreak">11</span>   
+                        <span id="numberStreak">{{currentStreak}}</span>   
                         <span id="streakIcon" class="material-icons">local_fire_department</span>
                     </div>
                     <span id="userIcon" class="material-symbols-outlined" (click)="accountClicked()">account_circle</span> 
