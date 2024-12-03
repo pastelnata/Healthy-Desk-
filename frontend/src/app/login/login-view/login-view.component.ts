@@ -11,17 +11,17 @@ import { jwtDecode } from "jwt-decode"
 
 export class LoginViewComponent implements OnInit {
   ngOnInit(): void {
+    // How username and permissions should be retrieved anywhere in the code:
     this.username = this.loginService.getCurrentUsername();
     this.isManager = this.loginService.getIsManager();
   }
-
+  constructor(private loginService: LoginServiceService) { }
 
   username: string = '';
   password: string = '';
   isManager: boolean = false;
 
 
-  constructor(private loginService: LoginServiceService) { }
 
   //Get data from login form
 
@@ -32,6 +32,7 @@ export class LoginViewComponent implements OnInit {
         this.clearInput();
         // success = login credentials are correct 
         if (response.success) {
+          // Decode the token for isManager bool
           const decodedUser: any = jwtDecode(response.token);
           if(decodedUser.isManager) {
             console.log("Manager is logged in");

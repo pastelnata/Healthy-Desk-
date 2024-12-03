@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,7 +6,12 @@ import { Router } from '@angular/router';
   templateUrl: './account-popup-view.component.html',
   styleUrls: ['./account-popup-view.component.css']
 })
-export class AccountPopupViewComponent {
+export class AccountPopupViewComponent implements OnInit {
+  ngOnInit(): void {
+    
+  }
+
+  
 
   constructor(private router: Router) {}
   gotoConnect() {

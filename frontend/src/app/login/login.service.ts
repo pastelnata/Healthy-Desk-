@@ -32,6 +32,8 @@ export class LoginServiceService {
               return response;
             } 
             else {
+              // Token contains managerid/userid, username, email, isManager bool.
+              // To get more user info for frontend, search for it in the database with the managerid/userid.
               console.log(response.token);
               localStorage.setItem('token', response.token);
 
@@ -65,6 +67,19 @@ export class LoginServiceService {
     if(token) {
       const decodedUser: any = jwtDecode(token);
       return decodedUser.isManager;
+    }
+    else {
+      console.log("Error getting isManager permissions. Token is null.")
+      return null;
+    }
+  }
+
+  // Decodes the token to receive email. Returns it in a string.
+  getEmail() {
+    const token = localStorage.getItem('token');
+    if(token) {
+      const decodedUser: any = jwtDecode(token);
+      return decodedUser.email;
     }
     else {
       console.log("Error getting isManager permissions. Token is null.")
