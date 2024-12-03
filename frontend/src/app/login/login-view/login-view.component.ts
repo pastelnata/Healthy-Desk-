@@ -59,9 +59,7 @@ export class LoginViewComponent implements OnInit {
   }
 
   isLoggedIn() {
-    // Checks if the user token is in localStorage (which means that user is logged in)
-    const token = localStorage.getItem('token')
-    return (token);
+    return this.loginService.isLoggedIn();
   }
 
   logOut() {

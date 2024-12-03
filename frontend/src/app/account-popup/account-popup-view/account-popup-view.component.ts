@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginServiceService } from '../../login/login.service';
 
 @Component({
   selector: 'app-account-popup-view',
@@ -7,15 +8,32 @@ import { Router } from '@angular/router';
   styleUrls: ['./account-popup-view.component.css']
 })
 export class AccountPopupViewComponent implements OnInit {
+
   ngOnInit(): void {
-    
+    this.username = this.loginService.getCurrentUsername();
+    this.email = this.loginService.getEmail();
+    this.isManager = this.loginService.getIsManager();
   }
+  constructor(private loginService: LoginServiceService, private router: Router) { }
 
-  
+  username: string = '';
+  email: string = '';
+  isManager: boolean = false;
 
-  constructor(private router: Router) {}
   gotoConnect() {
     this.router.navigate(['/connect']);
+  }
+
+  gotoLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  isLoggedIn() {
+    return this.loginService.isLoggedIn();
+  }
+
+  logOut() {
+    this.loginService.logOut();
   }
 
   @Output() close = new EventEmitter<void>();
