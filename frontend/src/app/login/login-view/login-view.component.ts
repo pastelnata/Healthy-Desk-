@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginServiceService } from '../login.service';
 import { User } from '../../models/UserModel';
+import { jwtDecode } from "jwt-decode"
 
 @Component({
   selector: 'app-login-view',
@@ -10,14 +11,15 @@ import { User } from '../../models/UserModel';
 
 export class LoginViewComponent implements OnInit {
   ngOnInit(): void {
-    //Loading user data (if existing)
-    this.loggedInUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.username = this.loginService.getCurrentUsername();
+    this.isManager = this.loginService.getIsManager();
   }
 
 
   username: string = '';
   password: string = '';
-  loggedInUser: User | null = null;
+  isManager: boolean = false;
+
 
   constructor(private loginService: LoginServiceService) { }
 
@@ -30,10 +32,8 @@ export class LoginViewComponent implements OnInit {
         this.clearInput();
         // success = login credentials are correct 
         if (response.success) {
-          localStorage.setItem('isLoggedIn', 'true')
-
-          if(response.isManager) {
-            localStorage.setItem('isManager', 'true')
+          const decodedUser: any = jwtDecode(response.token);
+          if(decodedUser.isManager) {
             console.log("Manager is logged in");
             alert("Login successful!");
             window.location.href = 'http://localhost:4200/manager';
@@ -58,7 +58,9 @@ export class LoginViewComponent implements OnInit {
   }
 
   isLoggedIn() {
-    return localStorage.getItem('isLoggedIn')==="true";
+    // Checks if the user token is in localStorage (which means that user is logged in)
+    const token = localStorage.getItem('token')
+    return (token);
   }
 
   logOut() {

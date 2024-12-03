@@ -27,7 +27,8 @@
     </div>
     <div class="already-logged-in" *ngIf="isLoggedIn()">
       <h3>You are logged in!</h3>
-      <p>Username: {{ loggedInUser?.username }}</p>
+      <p>Username: {{ username }}</p>
+      <p>Role: {{ isManager ? 'Manager' : 'User' }}</p>
       <div class="button-container">
         <button (click)="logOut()" class="logout-button">Log out</button>
       </div>

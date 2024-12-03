@@ -10,13 +10,13 @@ CREATE TABLE "User" (
     calories_burned INT
     );
 
-CREATE TABLE Profile (
+CREATE TABLE "Profile" (
     profileid SERIAL PRIMARY KEY,
     userid INT NOT NULL,
     title VARCHAR(255),
-    deskHeight INT NOT NULL,
-    timer_standing INT,
-    timer_sitting INT,
+    "deskHeight" INT NOT NULL,
+    timer_standing VARCHAR(255),
+    timer_sitting VARCHAR(255),
     FOREIGN KEY (userid) REFERENCES "User"(userid)
 );
 

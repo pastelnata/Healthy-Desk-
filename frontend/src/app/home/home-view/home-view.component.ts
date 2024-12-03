@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../home.service';
 import { Profile } from '../../models/ProfileModel';
 import { DeskApiService } from '../../services/desk-api.service';
-import { Data } from '@angular/router';
 
 @Component({
   selector: 'app-home-view',
@@ -38,6 +37,16 @@ export class HomeViewComponent implements OnInit {
   private holdTime: number = 200;
 
   ngOnInit(): void {
+    // Loads the profiles stored in the db
+    this.homeService.getAllProfiles().subscribe(
+      (response) => {
+        console.log('Profiles loaded successfully:', response);
+      },
+      (error) => {
+        console.error('Error loading profiles:', error);
+      }
+    );
+
     this.hours = this.homeService.hours;
     this.minutes = this.homeService.minutes;
     this.hoursStanding = this.homeService.hoursStanding;
@@ -222,6 +231,13 @@ export class HomeViewComponent implements OnInit {
       newProfile.deskHeight,
       newProfile.timer_sitting ?? '',
       newProfile.timer_standing ?? ''
+    ).subscribe(
+      (response) => {
+        console.log('Profile created successfully:', response);
+      },
+      (error) => {
+        console.error('Error creating profile:', error);
+      }
     );
     return newProfile;
   }

@@ -17,11 +17,11 @@ class UserController {
         try {
             const { username, email, password, height, mot_lvl } = req.body;
             console.log('Received request to create user with data:', req.body);
-            const newUser = await UserService.createUser(username, email, password, height, mot_lvl);
-            res.status(201).json(newUser);
+            const token = await UserService.createUser(username, email, password, height, mot_lvl);
+            res.status(201).json({success: true, token: token});
         } catch (error) {
             console.error('Error creating user:', error);
-            res.status(500).send(error);
+            res.status(500).send({success: false, message: error});
         }
     }
 
@@ -31,15 +31,13 @@ class UserController {
         try {
             const {username, password} = req.body;
             console.log('Received request to check for username and password:', req.body);
-            const userData = await UserService.loginUser(username, password);
+            const token = await UserService.loginUser(username, password);
     
             // Error when login credentials are wrong
-            if (!userData) {
+            if (!token) {
                 return res.status(401).json({ success: false, message: 'Wrong login credentials' });
             }
-
-            const isManager = (userData.constructor.name === 'Manager');
-            return res.status(200).json({ success: true, user: userData, isManager });
+            return res.status(200).json({success: true, token: token});
             
         } catch (error) {
             console.log("Error in loginUser controller:", error);

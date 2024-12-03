@@ -39,14 +39,6 @@ export class HomeService {
   }
 
   createProfile(userid: number, title: string, deskHeight: number, timer_sitting: string,timer_standing: string): Observable<any> {
-    console.log(
-      'Received request..',
-      title,
-      deskHeight,
-      timer_sitting,
-      timer_standing
-    );
-
     //this doesnt work for some reason
     const profileData = {
       userid,
@@ -55,10 +47,26 @@ export class HomeService {
       timer_sitting,
       timer_standing,
     };
+    console.log(
+      'Received request..',
+      JSON.stringify(profileData)
+    );
     return this.http.post(`${this.apiUrl}/profiles`, profileData).pipe(
       tap((response) => console.log('Profile created successfully:', response)),
       catchError((error) => {
         console.error('Error creating profile:', error);
+        return error;
+      })
+    );
+  }
+
+  getAllProfiles(): Observable<any> {
+    return this.http.get<Profile[]>(`${this.apiUrl}/profiles`).pipe(
+      tap((profiles) => {
+        console.log('Profiles retrieved successfully:', profiles);
+      }),
+      catchError((error) => {
+        console.error('Error getting profiles:', error);
         return error;
       })
     );
