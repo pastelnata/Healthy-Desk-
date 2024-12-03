@@ -60,9 +60,24 @@ export class HomeService {
     );
   }
 
+  deleteProfile(profileid: string): Observable<any> {
+    const url = `${this.apiUrl}/profiles/${profileid}`;
+    console.log('Received request to delete profile with ID:', profileid);
+    
+    return this.http.delete(url).pipe(
+      tap(() => console.log(`Profile with ID ${profileid} deleted successfully.`)),
+      catchError((error) => {
+        console.error('Error deleting profile:', error);
+        return error;
+      })
+    );
+  }
+  
+
   getAllProfiles(): Observable<any> {
     return this.http.get<Profile[]>(`${this.apiUrl}/profiles`).pipe(
       tap((profiles) => {
+        this.profiles = profiles;
         console.log('Profiles retrieved successfully:', profiles);
       }),
       catchError((error) => {

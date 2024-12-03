@@ -33,6 +33,22 @@ class ProfileServices {
       throw error;
     }
   }
+
+  static async deleteProfile(profileid: string) {
+    try {
+      const result = await Profile.destroy({
+        where: {
+          profileid: profileid,
+        },
+      });
+
+      // Return true if the profile was deleted, false if not
+      return result > 0;
+  } catch (error) {
+      console.error('Error deleting profile:', error);
+      throw new Error('Error deleting profile');
+  }
+}
 }
 
 export default ProfileServices;

@@ -40,7 +40,14 @@ export class HomeViewComponent implements OnInit {
     // Loads the profiles stored in the db
     this.homeService.getAllProfiles().subscribe(
       (response) => {
-        console.log('Profiles loaded successfully:', response);
+        this.homeService.profiles.forEach((profile) => {
+          if (this.isDefaultProfile()) {
+            this.defaultProfiles.push(profile);
+          } else {
+            this.profiles.push(profile);
+          }
+        })
+        console.log('Profiles loaded successfully:', this.homeService.profiles);
       },
       (error) => {
         console.error('Error loading profiles:', error);
@@ -51,7 +58,6 @@ export class HomeViewComponent implements OnInit {
     this.minutes = this.homeService.minutes;
     this.hoursStanding = this.homeService.hoursStanding;
     this.minutesStanding = this.homeService.minutesStanding;
-    this.profiles = this.homeService.profiles;
     this.motivationLevel = this.homeService.motivationLevel;
     this.profileId = this.homeService.profileId;
     this.defaultProfiles = this.homeService.defaultProfiles;
@@ -365,9 +371,20 @@ export class HomeViewComponent implements OnInit {
   }
 
   removeProfile(index: number, list: 'default' | 'timed') {
+    
     if (list === 'timed') {
+      // Remove from the DB
+      // needs another way of getting the profile id (this one doesnt work)
+      /*if(this.profiles[index].profileId?.toString) {
+        this.homeService.deleteProfile(this.profiles[index].profileId)
+      }*/
+      // Remove from front end
       this.profiles.splice(index, 1);
     } else if (list === 'default') {
+      // needs another way of getting the profile id (this one doesnt work)
+      /*if(this.defaultProfiles[index].profileId?.toString) {
+        this.homeService.deleteProfile(this.defaultProfiles[index].profileId)
+      }*/
       this.defaultProfiles.splice(index, 1);
     } else {
       alert('Error removing profile');

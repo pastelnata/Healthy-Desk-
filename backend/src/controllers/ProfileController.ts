@@ -23,6 +23,19 @@ class ProfileController {
             res.send(error);
         }
     }
+
+    async deleteProfile (req: Request, res: Response) {
+        try {
+            const { profileid } = req.params;
+            const deleted = await ProfileServices.deleteProfile(profileid);
+            res.send(deleted)
+        }
+        catch (error) {
+            console.error('Error deleting profile:', error);
+            res.send(error);
+        }
+
+    }
 }
 
 export default ProfileController;
