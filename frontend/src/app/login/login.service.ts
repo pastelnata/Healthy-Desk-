@@ -48,6 +48,17 @@ export class LoginServiceService {
     localStorage.removeItem('token');
   }
 
+  isLoggedIn() {
+    // Checks if the user token is in localStorage (which means that user is logged in)
+    const token = localStorage.getItem('token')
+    if(token) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  
   // Decodes the token to receive username. Returns it in a string.
   getCurrentUsername() {
     const token = localStorage.getItem('token');

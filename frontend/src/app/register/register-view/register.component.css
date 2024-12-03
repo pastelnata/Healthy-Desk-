@@ -31,7 +31,7 @@ body {
   background: lightblue;
   margin-top: 50px;
   margin-bottom: 50px;
-  width: 850px;
+  width: 700px;
   height: 850px;
   border-radius: 30px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 2);
@@ -184,4 +184,16 @@ select {
 select::placeholder {
   color: #888;
   font-weight: 400;
+}
+
+.login-redirect {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  color: #3f3554;
+}
+
+.login-redirect span {
+  color: black;
+  text-decoration: none;
 }
