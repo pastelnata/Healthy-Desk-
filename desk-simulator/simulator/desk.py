@@ -135,6 +135,7 @@ class Desk:
         with self.lock:
             if category == "state" and "position_mm" in data:
                 self.set_target_position(data["position_mm"])
+                logger.info(f"Desk ID={self.desk_id} position updated to {data['position_mm']}")
                 return True
-
+            logger.warning(f"Invalid category or missing position_mm in data for Desk ID={self.desk_id}")
             return False

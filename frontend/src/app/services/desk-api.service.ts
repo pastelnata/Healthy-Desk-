@@ -12,7 +12,7 @@ export class DeskApiService {
 
   private connectedDeskId: string = '';
 
-  private apiUrl = 'http://localhost:8000/api/v2/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
+  private apiUrl = 'http://127.0.0.1:8000/api/v2/E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7/desks'
 
  //  private apiUrl = 'http://localhost:3000/api/desks'
 
@@ -49,6 +49,10 @@ export class DeskApiService {
     return this.http.put(`${this.apiUrl}/${id}/state`, data, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     }).pipe(
+      map(response => {
+        console.log("Desk position updated response:", response);
+        return response;
+      }),
       catchError((error) => {
         console.log("Error updating desk position", error);
         throw error;
