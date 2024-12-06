@@ -41,7 +41,7 @@ def run(server_class=HTTPServer, handler_class=SimpleRESTServer, port=8000, use_
             desk_manager.add_desk(generate_desk_id(), generate_desk_name(), "Desk-O-Matic Co.", UserType.ACTIVE)
     
     # I commented this out to stop the simulations
-    # desk_manager.start_updates()
+    desk_manager.start_updates()
 
     def handler(*args, **kwargs):
         handler_class(desk_manager, *args, **kwargs)

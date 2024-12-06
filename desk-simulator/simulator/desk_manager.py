@@ -59,7 +59,15 @@ class DeskManager:
     def update_desk_category(self, desk_id, category, data):
         """Update a specific category of a desk."""
         desk = self.get_desk(desk_id)
-        return desk.update_category(category, data) if desk else False
+        if desk:
+            result = desk.update_category(category, data)
+            if result:
+                logger.info(f"Desk ID={desk_id} category {category} updated with data: {data}")
+            else:
+                logger.warning(f"Failed to update Desk ID={desk_id} category {category} with data: {data}")
+            return result
+        logger.warning(f"Desk ID={desk_id} not found for updating category {category}")
+        return False
 
     def add_desk(self, desk_id, name, manufacturer, user_type: UserType):
         """Add a new desk with a unique ID."""
@@ -160,15 +168,15 @@ class DeskManager:
             self.update_thread.start()
             logger.info("Update thread started.")
 
-        if self.simulation_thread is None or not self.simulation_thread.is_alive():
-            self.simulation_thread = threading.Thread(target=self._simulate_user_interactions)
-            self.simulation_thread.start()
-            logger.info("User simulation thread started.")
-
-        if self.power_off_thread is None or not self.power_off_thread.is_alive():
-            self.power_off_thread = threading.Thread(target=self._simulate_power_off)
-            self.power_off_thread.start()
-            logger.info("Power-off simulation thread started.")
+        #if self.simulation_thread is None or not self.simulation_thread.is_alive():
+        #    self.simulation_thread = threading.Thread(target=self._simulate_user_interactions)
+        #    self.simulation_thread.start()
+        #    logger.info("User simulation thread started.")
+#
+        #if self.power_off_thread is None or not self.power_off_thread.is_alive():
+        #    self.power_off_thread = threading.Thread(target=self._simulate_power_off)
+        #    self.power_off_thread.start()
+        #    logger.info("Power-off simulation thread started.")
 
     def stop_updates(self):
         """Stop the update and simulation threads."""

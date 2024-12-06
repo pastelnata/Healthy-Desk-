@@ -128,6 +128,7 @@ class SimpleRESTServer(BaseHTTPRequestHandler):
                     update_data = json.loads(post_data)
                     desk_id = self.path_parts[4]
                     category = self.path_parts[5]
+                    logger.info(f"Received update data: {update_data} for desk ID={desk_id} category={category}")
                     success = self.desk_manager.update_desk_category(desk_id, category, update_data)
                     if success:
                         current_target_position = self.desk_manager.get_desk(desk_id).get_target_position()
