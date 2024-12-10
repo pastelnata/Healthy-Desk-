@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export class AnalyticsController {
   async createOrUpdateDay(req: Request, res: Response) {
     const { userid } = req.params;
-    const { date, standing_hrs, times_moved, calories } = req.body;
+    const { date, standing_hrs, times_moved } = req.body;
     try {
       console.log("Received request..", req.body);
       const newDay = await AnalyticsService.createDay(
@@ -12,7 +12,6 @@ export class AnalyticsController {
         date,
         times_moved,
         standing_hrs,
-        calories
       );
       res.status(201).json(newDay);
     } catch (error) {

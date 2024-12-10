@@ -6,7 +6,6 @@ export class AnalyticsService {
     date: Date,
     times_moved: number,
     standing_hrs: number,
-    calories: number
   ) {
     const existingDay = await Day.findOne({
       where: {
@@ -16,7 +15,8 @@ export class AnalyticsService {
     });
     if (existingDay) {
       //if the day already exists, it updates it.
-      this.updateDay(existingDay, standing_hrs, times_moved, calories);
+      this.updateDay(existingDay, standing_hrs, times_moved);
+      return existingDay;
     }
     try {
       console.log("Creating day..", date);
@@ -25,7 +25,6 @@ export class AnalyticsService {
         date: date,
         times_moved: times_moved,
         standing_hrs: standing_hrs,
-        calories_burned: calories,
       });
       console.log("Day created successfully");
       return newDay;
@@ -39,16 +38,15 @@ export class AnalyticsService {
     existingDay: Day,
     addedHrs: number,
     addedTimesMoved: number,
-    addedCalories: number
-  ) {
+  ): Promise<Day> {
     try {
       console.log("Updating day..", existingDay);
       existingDay.update({
         standing_hrs: existingDay.getStandingHrs() + addedHrs,
         times_moved: existingDay.getTimesMoved() + addedTimesMoved,
-        calories_burned: existingDay.getCaloriesBurned() + addedCalories,
       });
       console.log("Day updated successfully");
+      return existingDay;
     } catch (error) {
       console.error("Error updating day:", error);
       throw error;

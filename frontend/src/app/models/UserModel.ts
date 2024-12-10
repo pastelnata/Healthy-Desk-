@@ -1,5 +1,5 @@
 export interface User {
-    userid: number;
+    userid?: number;
     username: string;
     email: string;
     password: string;
@@ -7,5 +7,4 @@ export interface User {
     mot_lvl: 'low' | 'medium' | 'high';
     avg_standing_hrs: number;
     times_moved: number;
-    calories_burned: number;
 }

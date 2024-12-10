@@ -4,6 +4,7 @@ import { catchError, map, Observable } from 'rxjs';
 import { Desk } from '../models/DeskModel';
 import { error } from 'highcharts';
 import { response } from 'express';
+import { LoginService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class DeskApiService {
  //  private apiUrl = 'http://localhost:3000/api/desks'
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private loginService: LoginService) {}
 
   getDesks(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrl)
@@ -80,9 +81,16 @@ export class DeskApiService {
     alert("connected to desk with id: " + this.connectedDeskId);
   }
 
-  // loadFromLocalStorage(){
-  //   return localStorage.getItem('deskId');
-  // }
+  isUserStanding(): Observable<boolean> {
+    return this.getDeskPosition().pipe(
+      map(deskHeight => {
+        const standingHeight = this.loginService.getUserHeight() * 0.61;
+        if (deskHeight >= standingHeight - 10 && deskHeight <= standingHeight + 10) {
+          return true;
+        } else return false;
+      })
+    );
+  }
 }
 
 

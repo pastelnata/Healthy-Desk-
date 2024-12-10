@@ -3,5 +3,4 @@ export interface Day {
     date: Date;
     standing_hrs?: number;
     times_moved?: number;
-    calories_burned?: number;
 }

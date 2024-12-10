@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../home.service';
 import { Profile } from '../../models/ProfileModel';
 import { DeskApiService } from '../../services/desk-api.service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-home-view',
@@ -78,6 +79,12 @@ export class HomeViewComponent implements OnInit {
     await this.apiDeskService.updateDeskPosition(newHeight).subscribe({
       next: (response) => {
         console.log('Desk position updated successfully:', response);
+        // checks if the user is standing and updates the variable
+        this.apiDeskService.isUserStanding().subscribe((isUserStanding) => {
+          this.isStanding = isUserStanding;
+          this.homeService.updateAnalytics(this.isStanding);
+          console.log('Is user standing:', isUserStanding);
+        });
       },
       error: (error) => {
         console.error('Failed to update desk position:', error);
@@ -318,7 +325,6 @@ export class HomeViewComponent implements OnInit {
         const sittingProfile = this.defaultProfiles[0];
         this.updateDeskHeight(sittingProfile.deskHeight);
         this.profileSelected(this.curProfile);
-        this.homeService.addTimeStanding(timerStanding);
       }, timerStanding);
     } catch (error) {
       alert('Error starting standing timer');

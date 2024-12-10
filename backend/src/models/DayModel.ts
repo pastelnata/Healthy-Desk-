@@ -4,7 +4,6 @@ import sequelize from "../config/sequelize";
 class Day extends Model {
     private standing_hrs!: number;
     private times_moved!: number;
-    private calories_burned!: number;
 
     getStandingHrs() {
         return this.standing_hrs;
@@ -12,10 +11,6 @@ class Day extends Model {
 
     getTimesMoved() {
         return this.times_moved;
-    }
-
-    getCaloriesBurned() {
-        return this.calories_burned;
     }
 }
 
@@ -39,10 +34,6 @@ Day.init(
             allowNull: true,
         },
         times_moved: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        calories_burned: {
             type: DataTypes.INTEGER,
             allowNull: true,
         }

@@ -7,7 +7,7 @@ CREATE TABLE "User" (
     mot_lvl VARCHAR(10) CHECK (mot_lvl IN ('low', 'medium', 'high')),
     avg_standing_hrs INT,
     times_moved INT,
-    calories_burned INT,
+    avg_times_moved INT,
     alert_streak INT,
     longest_streak INT
     );
@@ -35,7 +35,6 @@ CREATE TABLE Day (
     date DATE NOT NULL,
     standing_hrs INT,
     times_moved INT,
-    calories_burned INT,
     FOREIGN KEY (userid) REFERENCES "User"(userid)
 );
 
@@ -43,5 +42,5 @@ INSERT INTO "User" (username, "password", email, height, mot_lvl, alert_streak, 
     ('user1', 'password1', 'user1@gmail.com', 180, 'low', 21, 32);
     
 
-INSERT INTO "Manager" (email, username, "password") VALUES 
+INSERT INTO Manager (email, username, "password") VALUES 
     ('user2@gmail.com', 'user2', 'password2');

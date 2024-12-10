@@ -129,4 +129,15 @@ export class LoginService {
       return null;
     }
   }
+
+  getUserHeight() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedUser: any = jwtDecode(token);
+      return decodedUser.height;
+    } else {
+      console.log('Error getting user height. Token is null.');
+      return null;
+    }
+  }
 }

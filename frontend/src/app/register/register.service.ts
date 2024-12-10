@@ -36,7 +36,6 @@ export class RegisterService {
     mot_lvl: 'low' | 'medium' | 'high',
     avg_standing_hrs: number,
     times_moved: number,
-    calories_burned: number
   ): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const newUser = this.newUser(
@@ -47,7 +46,6 @@ export class RegisterService {
       mot_lvl,
       avg_standing_hrs,
       times_moved,
-      calories_burned
     );
 
     const { standingUpTime, sittingTime } = this.alertService.calcTimers(
@@ -87,10 +85,8 @@ export class RegisterService {
     mot_lvl: 'low' | 'medium' | 'high',
     avg_standing_hrs: number,
     times_moved: number,
-    calories_burned: number
   ): User {
     const newUser: User = {
-      userid: 3, //This should not be like that, needs to be changed when login is implemented
       username: username,
       email: email,
       password: password,
@@ -98,7 +94,6 @@ export class RegisterService {
       mot_lvl: mot_lvl,
       avg_standing_hrs: avg_standing_hrs,
       times_moved: times_moved,
-      calories_burned: calories_burned,
     };
 
     return newUser;

@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Profile } from '../models/ProfileModel';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { LoginService } from '../login/login.service';
 import { Day } from '../models/DayModel';
+import { AnalyticsService } from '../analytics/analytics.service';
+import { DeskApiService } from '../services/desk-api.service';
+import { time } from 'highcharts';
 
 @Injectable({
   providedIn: 'root',
@@ -19,10 +22,16 @@ export class HomeService {
   profiles: Profile[] = [];
   defaultProfiles: Profile[] = [];
   profileid: string = '';
+  isUserStanding!: boolean;
+  whenUserStood!: number;
+  whenUserSat!: number;
 
   apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient, private loginService: LoginService) {}
+  constructor(
+    private http: HttpClient,
+    private analyticsService: AnalyticsService
+  ) {}
 
   validateHours(hours: number) {
     if (hours > 23) hours = 23;
@@ -34,11 +43,7 @@ export class HomeService {
     else if (minutes < 0) minutes = 0;
   }
 
-  isUserStanding(deskHeight: number, standingHeight: number) {
-    if (deskHeight > standingHeight - 10 && deskHeight < standingHeight + 10)
-      return true;
-    else return false;
-  }
+  /* PROFILES CRUD */
 
   createProfile(
     userid: number,
@@ -147,4 +152,22 @@ export class HomeService {
     return { hours: 0, minutes: 0 };
   }
 
+  /* UPDATE ANALYTICS */
+  async updateAnalytics(isUserStanding: boolean) {
+    if (isUserStanding) {
+      this.whenUserStood = Date.now();
+      console.log('User stood at:', this.whenUserStood);
+    } else {
+      this.whenUserSat = Date.now();
+      console.log('User sat at:', this.whenUserSat);
+    }
+    const timeDifference = this.whenUserStood - this.whenUserSat;
+    if (timeDifference < 0) {
+      console.log('Time difference is negative, updating analytics with 0');
+      await this.analyticsService.updateDay(0);    
+      return; 
+    }
+    console.log('Updating analytics:', timeDifference);
+    await this.analyticsService.updateDay(timeDifference);
+  }
 }
