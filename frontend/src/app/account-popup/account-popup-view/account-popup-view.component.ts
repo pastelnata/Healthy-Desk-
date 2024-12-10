@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginServiceService } from '../../login/login.service';
+import { LoginService } from '../../login/login.service';
 
 @Component({
   selector: 'app-account-popup-view',
@@ -14,7 +14,7 @@ export class AccountPopupViewComponent implements OnInit {
     this.email = this.loginService.getEmail();
     this.isManager = this.loginService.getIsManager();
   }
-  constructor(private loginService: LoginServiceService, private router: Router) { }
+  constructor(private loginService: LoginService, private router: Router) { }
 
   username: string = '';
   email: string = '';

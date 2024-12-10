@@ -318,6 +318,7 @@ export class HomeViewComponent implements OnInit {
         const sittingProfile = this.defaultProfiles[0];
         this.updateDeskHeight(sittingProfile.deskHeight);
         this.profileSelected(this.curProfile);
+        this.homeService.addTimeStanding(timerStanding);
       }, timerStanding);
     } catch (error) {
       alert('Error starting standing timer');

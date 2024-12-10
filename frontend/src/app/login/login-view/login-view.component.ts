@@ -1,27 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginServiceService } from '../login.service';
+import { LoginService } from '../login.service';
 import { User } from '../../models/UserModel';
-import { jwtDecode } from "jwt-decode"
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-login-view',
   templateUrl: './login-view.component.html',
-  styleUrl: './login-view.component.css'
+  styleUrl: './login-view.component.css',
 })
-
 export class LoginViewComponent implements OnInit {
   ngOnInit(): void {
     // How username and permissions should be retrieved anywhere in the code:
     this.username = this.loginService.getCurrentUsername();
     this.isManager = this.loginService.getIsManager();
   }
-  constructor(private loginService: LoginServiceService) { }
+  constructor(private loginService: LoginService) {}
 
   username: string = '';
   password: string = '';
   isManager: boolean = false;
-
-
 
   //Get data from login form
 
@@ -30,25 +27,24 @@ export class LoginViewComponent implements OnInit {
     this.loginService.logIn(this.username, this.password).subscribe(
       (response) => {
         this.clearInput();
-        // success = login credentials are correct 
+        // success = login credentials are correct
         if (response.success) {
           // Decode the token for isManager bool
           const decodedUser: any = jwtDecode(response.token);
-          if(decodedUser.isManager) {
-            console.log("Manager is logged in");
-            alert("Login successful!");
+          if (decodedUser.isManager) {
+            console.log('Manager is logged in');
+            alert('Login successful!');
             window.location.href = 'http://localhost:4200/manager';
-          }
-          else {
-            console.log("User is logged in");
-            alert("Login successful!");
+          } else {
+            console.log('User is logged in');
+            alert('Login successful!');
             window.location.href = 'http://localhost:4200';
           }
         }
       },
       (error) => {
-        console.log("Error", error);
-        alert("Wrong credentials or user not found");
+        console.log('Error', error);
+        alert('Wrong credentials or user not found');
       }
     );
   }
@@ -65,5 +61,4 @@ export class LoginViewComponent implements OnInit {
   logOut() {
     this.loginService.logOut();
   }
-
 }

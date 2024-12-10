@@ -3,6 +3,8 @@ import { Profile } from '../models/ProfileModel';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
+import { LoginService } from '../login/login.service';
+import { Day } from '../models/DayModel';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +22,7 @@ export class HomeService {
 
   apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private loginService: LoginService) {}
 
   validateHours(hours: number) {
     if (hours > 23) hours = 23;
@@ -144,4 +146,5 @@ export class HomeService {
     }
     return { hours: 0, minutes: 0 };
   }
+
 }
