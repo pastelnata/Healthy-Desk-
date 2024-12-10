@@ -15,8 +15,8 @@ export class AnalyticsService {
     const userid = this.loginService.getUserId();
     if (userid !== null) {
       const day = this.createDayModel(timeStanding, userid);
-      console.log('Sending request to create day:', day);
-      await this.http.post(`${this.apiUrl}/${Number(userid)}`, day).subscribe({
+      console.log('Sending request to create/update day:', day);
+      await this.http.put(`${this.apiUrl}/${Number(userid)}`, day).subscribe({
         next: (response) => console.log('Day created successfully:', response),
         error: (error) => console.error('Error creating day:', error),
       });

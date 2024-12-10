@@ -24,7 +24,7 @@ export class AnalyticsService {
         userid: userid,
         date: date,
         times_moved: times_moved,
-        standing_hrs: standing_hrs,
+        standing_hrs: Math.round(standing_hrs),
       });
       console.log("Day created successfully");
       return newDay;
@@ -42,8 +42,8 @@ export class AnalyticsService {
     try {
       console.log("Updating day..", existingDay);
       existingDay.update({
-        standing_hrs: existingDay.getStandingHrs() + addedHrs,
-        times_moved: existingDay.getTimesMoved() + addedTimesMoved,
+        standing_hrs: Math.round(existingDay.getStandingHrs() + addedHrs),
+        times_moved: Math.round(existingDay.getTimesMoved() + addedTimesMoved),
       });
       console.log("Day updated successfully");
       return existingDay;

@@ -30,7 +30,8 @@ export class HomeService {
 
   constructor(
     private http: HttpClient,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private loginService: LoginService
   ) {}
 
   validateHours(hours: number) {
@@ -52,7 +53,6 @@ export class HomeService {
     timer_sitting: string,
     timer_standing: string
   ): Observable<any> {
-    //this doesnt work for some reason
     const profileData = {
       userid,
       title,
@@ -61,7 +61,7 @@ export class HomeService {
       timer_standing,
     };
     console.log('Received request..', JSON.stringify(profileData));
-    return this.http.post(`${this.apiUrl}/profiles`, profileData).pipe(
+    return this.http.post(`${this.apiUrl}/${userid}/profiles`, profileData).pipe(
       tap((response) => console.log('Profile created successfully:', response)),
       catchError((error) => {
         console.error('Error creating profile:', error);
@@ -85,7 +85,7 @@ export class HomeService {
       timer_sitting,
       timer_standing,
     };
-    const url = `${this.apiUrl}/profiles/${profileid}`;
+    const url = `${this.apiUrl}/${userid}/profiles/${profileid}`;
     console.log('Received request to update profile with ID:', profileid);
     return this.http.put(url, profileData).pipe(
       tap((response) => console.log('Profile updated successfully:', response)),
@@ -97,22 +97,28 @@ export class HomeService {
   }
 
   deleteProfile(profileid: number): Observable<any> {
-    const url = `${this.apiUrl}/profiles/${profileid}`;
-    console.log('Received request to delete profile with ID:', profileid);
-
-    return this.http.delete(url).pipe(
-      tap(() =>
-        console.log(`Profile with ID ${profileid} deleted successfully.`)
-      ),
-      catchError((error) => {
-        console.error('Error deleting profile:', error);
-        return error;
-      })
-    );
+    const userid = this.loginService.getUserId();
+    if (userid) {
+      const url = `${this.apiUrl}/${userid}/profiles/${profileid}`;
+  
+      return this.http.delete(url).pipe(
+        tap(() =>
+          console.log(`Profile with ID ${profileid} deleted successfully.`)
+        ),
+        catchError((error) => {
+          console.error('Error deleting profile:', error);
+          return error;
+        })
+      ); 
+    }
+    else {
+      return throwError('User not logged in');
+    }
   }
 
   getAllProfiles(): Observable<Profile[]> {
-    return this.http.get<Profile[]>(`${this.apiUrl}/profiles`).pipe(
+    const userid = this.loginService.getUserId();
+    return this.http.get<Profile[]>(`${this.apiUrl}/${userid}/profiles`).pipe(
       tap((response) => {
         response.forEach((profile) => {
           if (this.isDefaultProfile(profile)) {
