@@ -33,25 +33,13 @@ export class DeskApiService {
   private init() {
     this.getDeskPosition().subscribe((position) => {
       this.curDeskPosition = position;
-      console.log('Current desk position:', this.curDeskPosition);
-  
-      const userHeight = this.loginService.getUserHeight();
-      const sittingHeight = userHeight * 0.43;
-      const standingHeight = userHeight * 0.61;
-  
-      if (this.checkPosition(this.curDeskPosition, sittingHeight)) {
-        this.userIsSitting = true;
-        this.userIsStanding = false;
-        console.log('User is sitting');
-      } else if (this.checkPosition(this.curDeskPosition, standingHeight)) {
-        this.userIsSitting = false;
-        this.userIsStanding = true;
-        console.log('User is standing');
-      } else {
-        this.userIsSitting = false;
-        this.userIsStanding = false;
-        console.log('User is moving');
-      }
+      console.log('Current desk position:', this.curDeskPosition);  
+      const sittingHeight = this.loginService.getUserHeight() * 0.43;
+      const standingHeight = this.loginService.getUserHeight() * 0.61;     
+      this.userIsStanding = this.checkPosition(this.curDeskPosition, standingHeight);
+      this.userIsSitting = this.checkPosition(this.curDeskPosition, sittingHeight);
+      console.log('User is standing:', this.userIsStanding);
+      console.log('User is sitting:', this.userIsSitting);
     });
   }
 
@@ -97,8 +85,8 @@ export class DeskApiService {
         map((response: Desk) => {
           console.log('Desk position updated response:', response);
           this.targetPosition = null;
-          this.getUserPosture(position);
           //checks if user is in movement
+          this.updateAnalytics();
           return response;
         }),
         catchError((error) => {
@@ -127,9 +115,7 @@ export class DeskApiService {
 
   async getUserPosture(deskPosition: number) {
     const sittingHeight = this.loginService.getUserHeight() * 0.43;
-    console.log('Sitting height:', sittingHeight);
     const standingHeight = this.loginService.getUserHeight() * 0.61;
-    console.log('Standing height:', standingHeight);
     try {
       console.log('Getting user posture', deskPosition);
       if (this.ifUserSat(deskPosition, sittingHeight)) {
@@ -137,7 +123,7 @@ export class DeskApiService {
         this.userIsStanding = false;
         console.log('User is sitting');
         return;
-      } else if (this.ifUserSat(deskPosition, sittingHeight)) {
+      } else if (this.ifUserStood(deskPosition, standingHeight)) {
         this.userIsStanding = true;
         this.userIsSitting = false;
         console.log('User is standing');
@@ -153,7 +139,7 @@ export class DeskApiService {
       console.error('Error getting user posture:', error);
     }
   }
-
+  
   ifUserSat(deskPosition: number, sittingHeight: number): boolean {
     // if the user was already standing 
     // double values dont get added
@@ -164,7 +150,7 @@ export class DeskApiService {
       return true;
     } else return false;
   }
-
+  
   ifUserStood(deskPosition: number, standingHeight: number): boolean {
     if (
       this.userIsSitting &&
@@ -184,22 +170,26 @@ export class DeskApiService {
     // if the user is standing
     if (this.userIsStanding) {
       this.whenUserStood = Date.now();
-      console.log('User stood at:', this.whenUserStood);
     } else if (this.userIsSitting) {
       this.whenUserSat = Date.now();
-      console.log('User sat at:', this.whenUserSat);
     }
-    const timeDifference = this.whenUserStood - this.whenUserSat;
+    // example: if user stood at 14h30 and sat at 14h45, it returns 15m (in ms)
+    const timeDifference = this.whenUserSat - this.whenUserStood;
 
+    console.log('Updating analytics...');
+    console.log('Time difference:', timeDifference);
     if (this.whenUserSat !== 0 && this.whenUserStood !== 0) {
       await this.analyticsService.updateDay(timeDifference);
       this.whenUserSat = 0;
       this.whenUserStood = 0;
       return;
     }
-
-    console.log('Time difference is negative, updating analytics with 0');
-    await this.analyticsService.updateDay(0);
     
+    // user stood up
+    if(timeDifference < 0) {
+      this.analyticsService.updateDay(0);
+      this.whenUserSat = 0;
+      return;
+    }
   }
 }
