@@ -19,6 +19,23 @@ export class AnalyticsController {
       res.status(500).send("Error creating day");
     }
   }
+
+  async getMonthAnalytics(req: Request, res: Response) {
+    const { userid } = req.params;
+    const { year, month } = req.query;
+    try {
+      console.log('Getting month analytics in controller..', year, month);
+      const daysOfMonth = await AnalyticsService.getMonthAnalytics(
+        Number(userid),
+        Number(year),
+        Number(month)
+      );
+      res.status(200).json(daysOfMonth);
+    } catch (error) {
+      console.error("Error getting month analytics:", error);
+      res.status(500).send("Error getting month analytics");
+    }
+  }
 }
 
 export default AnalyticsController;

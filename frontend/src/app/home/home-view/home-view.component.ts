@@ -76,23 +76,17 @@ export class HomeViewComponent implements OnInit {
   async updateDeskHeight(newHeight: number) {
     //makes it so the desk height is not for example 68.00000000000001
     newHeight = parseFloat(newHeight.toFixed(1));
-    this.curDeskHeight = newHeight;
     console.log('Desk height:', newHeight); // Debugging line
 
     await this.apiDeskService.updateDeskPosition(newHeight).subscribe({
       next: (response) => {
         console.log('Desk position updated successfully:', response);
-        // checks if the user is standing and updates the variable
-        this.apiDeskService.isUserStanding().subscribe((isUserStanding) => {
-          this.isStanding = isUserStanding;
-          this.homeService.updateAnalytics(this.isStanding);
-          console.log('Is user standing:', isUserStanding);
-        });
       },
       error: (error) => {
         console.error('Failed to update desk position:', error);
       },
     });
+    this.curDeskHeight = newHeight;
   }
 
   increaseHeight() {
@@ -114,6 +108,7 @@ export class HomeViewComponent implements OnInit {
     this.holdTime = 75;
 
     this.intervalId = setInterval(() => {
+      this.curDeskHeight += 0.1;
       this.increaseHeight();
       this.holdTime = Math.max(20, this.holdTime - 20);
       this.clearAndRestartInterval(() => this.onHoldIncrease());
@@ -124,9 +119,8 @@ export class HomeViewComponent implements OnInit {
   onHoldDecrease() {
     this.clearInterval();
     this.holdTime = 75;
-
     this.intervalId = setInterval(() => {
-      this.decreaseHeight();
+      this.curDeskHeight -= 0.1;
       this.holdTime = Math.max(20, this.holdTime - 20);
       this.clearAndRestartInterval(() => this.onHoldDecrease());
     }, this.holdTime);

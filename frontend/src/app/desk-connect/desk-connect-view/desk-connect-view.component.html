@@ -11,7 +11,7 @@
             <div class="desk-details" *ngFor="let deskInfos of desksInfos; let id as index">
                 <h3>{{ deskInfos.name }}</h3>
                 <p>Manufacturer: {{ deskInfos.manufacturer }}</p>
-                <p>Current position: {{ deskInfos.position }}</p>
+                <p>Current position: {{ deskInfos.position_mm }}</p>
                 <p>Status: {{ deskInfos.status }}</p>
                 <button class="connect-button" (click)="connectToDesk(id.id)">Connect</button>
             </div>

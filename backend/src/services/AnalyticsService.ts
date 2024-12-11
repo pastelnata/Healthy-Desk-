@@ -1,3 +1,5 @@
+import { Op, fn, col } from "sequelize";
+import sequelize from "../config/sequelize";
 import Day from "../models/DayModel";
 
 export class AnalyticsService {
@@ -5,7 +7,7 @@ export class AnalyticsService {
     userid: number,
     date: Date,
     times_moved: number,
-    standing_hrs: number,
+    standing_hrs: number
   ) {
     const existingDay = await Day.findOne({
       where: {
@@ -37,7 +39,7 @@ export class AnalyticsService {
   static async updateDay(
     existingDay: Day,
     addedHrs: number,
-    addedTimesMoved: number,
+    addedTimesMoved: number
   ): Promise<Day> {
     try {
       console.log("Updating day..", existingDay);
@@ -51,6 +53,46 @@ export class AnalyticsService {
       console.error("Error updating day:", error);
       throw error;
     }
+  }
+
+  static async getMonthAnalytics(
+    userid: number,
+    year: number,
+    month: number
+  ): Promise<{ totalTimesMoved: number; avgStandingHrs: number }> {
+    try {
+      console.log("Getting month analytics..", year + "-" + month);
+
+      const daysOfMonth = await Day.findAll({
+        where: {
+          [Op.and]: [
+            sequelize.where(sequelize.fn('EXTRACT', sequelize.literal('YEAR FROM date')), year),
+            sequelize.where(sequelize.fn('EXTRACT', sequelize.literal('MONTH FROM date')), month),
+            { userid: userid }
+          ]
+        },
+      });
+      console.log("Days of month:", daysOfMonth);
+      return this.calculateMonthAnalytics(daysOfMonth);
+    } catch (error) {
+      console.error("Error getting month analytics:", error);
+      throw error;
+    }
+  }
+
+  static calculateMonthAnalytics(daysOfMonth: Day[]): {
+    totalTimesMoved: number;
+    avgStandingHrs: number;
+  } {
+    const totalTimesMoved = daysOfMonth.reduce(
+      (sum, day) => sum + day.getTimesMoved(),
+      0
+    );
+    const avgStandingHrs =
+      daysOfMonth.reduce((sum, day) => sum + day.getStandingHrs(), 0) /
+      daysOfMonth.length;
+      console.log("Month analytics calculated:", totalTimesMoved, avgStandingHrs);
+    return { totalTimesMoved, avgStandingHrs };
   }
 }
 

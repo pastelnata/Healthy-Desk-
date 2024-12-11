@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Day } from '../models/DayModel';
 import { LoginService } from '../login/login.service';
 import { HttpClient } from '@angular/common/http';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { Month } from '../models/MonthModel';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +11,9 @@ import { HttpClient } from '@angular/common/http';
 export class AnalyticsService {
   private apiUrl = 'http://localhost:3000/api/analytics';
 
-  constructor(private loginService: LoginService, private http: HttpClient) {}
+  constructor(private loginService: LoginService, private http: HttpClient) {
+    
+  }
 
   async updateDay(timeStanding: number) {
     const userid = this.loginService.getUserId();
@@ -37,5 +41,25 @@ export class AnalyticsService {
       standing_hrs: hoursStanding,
     };
     return day;
+  }
+
+  getMonthAnalytics(date: Date): Observable<Month> {
+    const curUser = this.loginService.getUserId();
+    console.log('date:', date);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    console.log('Getting month analytics for:', year, month);
+  
+    return this.http.get<Month>(`${this.apiUrl}/${curUser}/month`, { params: { year, month } })
+      .pipe(
+        map(response => {
+          console.log(`${date} analytics retrieved successfully:`, response);
+          return response;
+        }),
+        catchError(error => {
+          console.error('Error retrieving month analytics:', error);
+          return throwError('Error retrieving month analytics');
+        })
+      );
   }
 }

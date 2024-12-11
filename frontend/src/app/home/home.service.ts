@@ -23,14 +23,11 @@ export class HomeService {
   defaultProfiles: Profile[] = [];
   profileid: string = '';
   isUserStanding!: boolean;
-  whenUserStood!: number;
-  whenUserSat!: number;
 
   apiUrl = 'http://localhost:3000/api';
 
   constructor(
     private http: HttpClient,
-    private analyticsService: AnalyticsService,
     private loginService: LoginService
   ) {}
 
@@ -156,24 +153,5 @@ export class HomeService {
       return { hours, minutes };
     }
     return { hours: 0, minutes: 0 };
-  }
-
-  /* UPDATE ANALYTICS */
-  async updateAnalytics(isUserStanding: boolean) {
-    if (isUserStanding) {
-      this.whenUserStood = Date.now();
-      console.log('User stood at:', this.whenUserStood);
-    } else {
-      this.whenUserSat = Date.now();
-      console.log('User sat at:', this.whenUserSat);
-    }
-    const timeDifference = this.whenUserStood - this.whenUserSat;
-    if (timeDifference < 0) {
-      console.log('Time difference is negative, updating analytics with 0');
-      await this.analyticsService.updateDay(0);    
-      return; 
-    }
-    console.log('Updating analytics:', timeDifference);
-    await this.analyticsService.updateDay(timeDifference);
   }
 }
