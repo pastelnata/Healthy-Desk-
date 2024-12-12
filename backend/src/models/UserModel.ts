@@ -18,14 +18,13 @@ class User extends Model implements IUser {
     public mot_lvl!: 'low' | 'medium' | 'high';
     public avg_standing_hrs!: number;
     public times_moved!: number;
-    public calories_burned!: number;
     public alert_streak!: number;
     public longest_streak!: number;
 
     public generateToken(): string {
         console.log("Generating token for user:", this.email);
         const payload = { userid: this.userid, email: this.email, username: this.username, isManager: false,
-            alert_streak: this.alert_streak, longest_streak: this.longest_streak
+            alert_streak: this.alert_streak, longest_streak: this.longest_streak, height: this.height
          };
         const secret = "123456";
         console.log("Token data:", JSON.stringify(payload));
@@ -66,10 +65,6 @@ User.init(
             defaultValue: 0,
         },
         times_moved: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-        },
-        calories_burned: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },

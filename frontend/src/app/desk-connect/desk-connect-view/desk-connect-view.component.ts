@@ -48,7 +48,7 @@ export class DeskConnectViewComponent {
           id: id,
           name: desk.config.name,
           manufacturer: desk.config.manufacturer,
-          position: desk.state.position_mm,
+          position_mm: desk.state.position_mm,
           status: desk.state.status,
           speed: desk.state.speed
         };

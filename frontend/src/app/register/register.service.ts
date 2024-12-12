@@ -6,6 +6,7 @@ import { HomeService } from '../home/home.service';
 import { Profile } from '../models/ProfileModel';
 import { User } from '../models/UserModel';
 import { AlertService } from '../alert/alert.service';
+import { LoginService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,8 @@ export class RegisterService {
   constructor(
     private http: HttpClient,
     private homeService: HomeService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private loginService: LoginService
   ) {}
 
   /* REGISTER USER */
@@ -35,8 +37,7 @@ export class RegisterService {
     height: number,
     mot_lvl: 'low' | 'medium' | 'high',
     avg_standing_hrs: number,
-    times_moved: number,
-    calories_burned: number
+    times_moved: number
   ): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const newUser = this.newUser(
@@ -46,8 +47,7 @@ export class RegisterService {
       height,
       mot_lvl,
       avg_standing_hrs,
-      times_moved,
-      calories_burned
+      times_moved
     );
 
     const { standingUpTime, sittingTime } = this.alertService.calcTimers(
@@ -55,8 +55,6 @@ export class RegisterService {
     );
     this.standingUpTime = standingUpTime;
     this.sittingTime = sittingTime;
-
-    this.registerProfiles(height);
 
     console.log(`NEW USER: ${JSON.stringify(newUser)}`);
 
@@ -67,10 +65,11 @@ export class RegisterService {
         { headers }
       )
       .pipe(
-        map((response) => {
+        map(async (response) => {
           console.log('User created successfully:', response.token);
           localStorage.setItem('token', response.token);
-          return response;
+          await this.registerProfiles(height);
+          return response.token;
         }),
         catchError((error) => {
           console.error('Error creating user:', error);
@@ -86,11 +85,9 @@ export class RegisterService {
     height: number,
     mot_lvl: 'low' | 'medium' | 'high',
     avg_standing_hrs: number,
-    times_moved: number,
-    calories_burned: number
+    times_moved: number
   ): User {
     const newUser: User = {
-      userid: 3, //This should not be like that, needs to be changed when login is implemented
       username: username,
       email: email,
       password: password,
@@ -98,7 +95,6 @@ export class RegisterService {
       mot_lvl: mot_lvl,
       avg_standing_hrs: avg_standing_hrs,
       times_moved: times_moved,
-      calories_burned: calories_burned,
     };
 
     return newUser;
@@ -106,32 +102,20 @@ export class RegisterService {
 
   /* DEFAULT TIMER PROFILES */
 
-  addProfile(newProfile: Profile, list: 'default' | 'timed') {
-    this.homeService
-      .createProfile(
-        newProfile.userId,
-        newProfile.title,
-        newProfile.deskHeight,
-        newProfile.timer_sitting ?? '',
-        newProfile.timer_standing ?? ''
-      )
-      .subscribe({
-        next: (response) => {
-          newProfile.profileid = response.profileid;
-          if (list === 'default') {
-            this.homeService.defaultProfiles.push(newProfile);
-          } else if(list === 'timed') {
-            this.homeService.profiles.push(newProfile);
-          }
-          console.log('Profile created successfully:', response);
-        },
-        error: (error) => {
-          console.error('Error creating profile:', error);
-        },
-      });
+  async registerProfiles(userHeight: number) {
+    this.getTimers();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const curUser = await this.loginService.getUserId();
+    console.log('current user:', curUser);
+    if (curUser) {
+      console.log('registering profiles...');
+      this.newStandingProfile(userHeight, curUser, headers);
+      this.newSittingDefault(userHeight, curUser, headers);
+      this.newStandingDefault(userHeight, curUser, headers);
+    }
   }
 
-  registerProfiles(userHeight: number) {
+  getTimers() {
     console.log('standing up time', this.standingUpTime);
     console.log('sitting time', this.standingUpTime);
     const { hours: standingUpHours, minutes: standingUpMinutes } =
@@ -142,21 +126,6 @@ export class RegisterService {
     this.standingUpMinutes = standingUpMinutes;
     this.sittingHours = sittingHours;
     this.sittingMinutes = sittingMinutes;
-
-    console.log(
-      'standing up time after',
-      this.standingUpHours,
-      this.standingUpMinutes
-    );
-    console.log('sitting time after', this.sittingHours, this.sittingMinutes);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const newProfile = this.newStandingProfile(userHeight);
-    const newDefaultSitting = this.newSittingDefault(userHeight);
-    const newDefaultStanding = this.newStandingDefault(userHeight);
-
-    this.http.post(`${this.apiUrl}/profiles`, newProfile, { headers });
-    this.http.post(`${this.apiUrl}/profiles`, newDefaultSitting, { headers });
-    this.http.post(`${this.apiUrl}/profiles`, newDefaultStanding, { headers });
   }
 
   convertMinutesToHours(time: number): { hours: number; minutes: number } {
@@ -165,7 +134,7 @@ export class RegisterService {
     return { hours, minutes };
   }
 
-  newStandingProfile(userHeight: number): Profile {
+  async newStandingProfile(userHeight: number, userid: number, headers: any) {
     const timeStanding = `${this.standingUpHours}h ${this.standingUpMinutes}m`;
     const timeSitting = `${this.sittingHours}h ${this.sittingMinutes}m`;
 
@@ -174,36 +143,58 @@ export class RegisterService {
       deskHeight: Math.round(userHeight * 0.61),
       timer_sitting: timeStanding,
       timer_standing: timeSitting,
-      userId: 3,
+      userId: userid,
     };
+    await this.http.post(`${this.apiUrl}/${userid}/profiles`, newProfile, { headers }).subscribe({
+      next: (response) => {
+        this.homeService.profiles.push(newProfile);
+        console.log('Profile created:', response);
+      },
+      error: (error) => {
+        console.error('Error creating profile:', error);
+      }
+    });
 
-    this.addProfile(newProfile, 'timed');
     return newProfile;
   }
 
   /* DEFAULT PROFILES */
 
-  newSittingDefault(userHeight: number): Profile {
+  async newSittingDefault(userHeight: number, userid: number, headers: any) {
     const newProfile: Profile = {
       title: 'Optimal Sitting Height',
       deskHeight: Math.round(userHeight * 0.43),
-      userId: 3,
+      userId: userid,
     };
-
-    this.addProfile(newProfile, 'default');
-
-    return newProfile;
+    await this.http.post(`${this.apiUrl}/${userid}/profiles`, newProfile, {
+      headers,
+    }).subscribe({
+      next: (response) => {
+        this.homeService.defaultProfiles.push(newProfile);
+        console.log('Profile created:', response);
+      },
+      error: (error) => {
+        console.error('Error creating profile:', error);
+      }
+    });
   }
 
-  newStandingDefault(userHeight: number): Profile {
+  async newStandingDefault(userHeight: number, userid: number, headers: any) {
     const newProfile: Profile = {
       title: 'Optimal Standing Height',
       deskHeight: Math.round(userHeight * 0.61),
-      userId: 3,
+      userId: userid,
     };
-
-    this.addProfile(newProfile, 'default');
-
-    return newProfile;
+    await this.http.post(`${this.apiUrl}/${userid}/profiles`, newProfile, {
+      headers,
+    }).subscribe({
+      next: (response) => {
+        this.homeService.defaultProfiles.push(newProfile);
+        console.log('Profile created:', response);
+      },
+      error: (error) => {
+        console.error('Error creating profile:', error);
+      }
+  });
   }
 }

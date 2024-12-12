@@ -1,8 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Profile } from '../models/ProfileModel';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
+import { LoginService } from '../login/login.service';
+import { Day } from '../models/DayModel';
+import { AnalyticsService } from '../analytics/analytics.service';
+import { DeskApiService } from '../services/desk-api.service';
+import { time } from 'highcharts';
 
 @Injectable({
   providedIn: 'root',
@@ -17,10 +22,14 @@ export class HomeService {
   profiles: Profile[] = [];
   defaultProfiles: Profile[] = [];
   profileid: string = '';
+  isUserStanding!: boolean;
 
   apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private loginService: LoginService
+  ) {}
 
   validateHours(hours: number) {
     if (hours > 23) hours = 23;
@@ -32,11 +41,7 @@ export class HomeService {
     else if (minutes < 0) minutes = 0;
   }
 
-  isUserStanding(deskHeight: number, standingHeight: number) {
-    if (deskHeight > standingHeight - 10 && deskHeight < standingHeight + 10)
-      return true;
-    else return false;
-  }
+  /* PROFILES CRUD */
 
   createProfile(
     userid: number,
@@ -45,7 +50,6 @@ export class HomeService {
     timer_sitting: string,
     timer_standing: string
   ): Observable<any> {
-    //this doesnt work for some reason
     const profileData = {
       userid,
       title,
@@ -54,7 +58,7 @@ export class HomeService {
       timer_standing,
     };
     console.log('Received request..', JSON.stringify(profileData));
-    return this.http.post(`${this.apiUrl}/profiles`, profileData).pipe(
+    return this.http.post(`${this.apiUrl}/${userid}/profiles`, profileData).pipe(
       tap((response) => console.log('Profile created successfully:', response)),
       catchError((error) => {
         console.error('Error creating profile:', error);
@@ -78,7 +82,7 @@ export class HomeService {
       timer_sitting,
       timer_standing,
     };
-    const url = `${this.apiUrl}/profiles/${profileid}`;
+    const url = `${this.apiUrl}/${userid}/profiles/${profileid}`;
     console.log('Received request to update profile with ID:', profileid);
     return this.http.put(url, profileData).pipe(
       tap((response) => console.log('Profile updated successfully:', response)),
@@ -90,22 +94,28 @@ export class HomeService {
   }
 
   deleteProfile(profileid: number): Observable<any> {
-    const url = `${this.apiUrl}/profiles/${profileid}`;
-    console.log('Received request to delete profile with ID:', profileid);
-
-    return this.http.delete(url).pipe(
-      tap(() =>
-        console.log(`Profile with ID ${profileid} deleted successfully.`)
-      ),
-      catchError((error) => {
-        console.error('Error deleting profile:', error);
-        return error;
-      })
-    );
+    const userid = this.loginService.getUserId();
+    if (userid) {
+      const url = `${this.apiUrl}/${userid}/profiles/${profileid}`;
+  
+      return this.http.delete(url).pipe(
+        tap(() =>
+          console.log(`Profile with ID ${profileid} deleted successfully.`)
+        ),
+        catchError((error) => {
+          console.error('Error deleting profile:', error);
+          return error;
+        })
+      ); 
+    }
+    else {
+      return throwError('User not logged in');
+    }
   }
 
   getAllProfiles(): Observable<Profile[]> {
-    return this.http.get<Profile[]>(`${this.apiUrl}/profiles`).pipe(
+    const userid = this.loginService.getUserId();
+    return this.http.get<Profile[]>(`${this.apiUrl}/${userid}/profiles`).pipe(
       tap((response) => {
         response.forEach((profile) => {
           if (this.isDefaultProfile(profile)) {

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../home.service';
 import { Profile } from '../../models/ProfileModel';
 import { DeskApiService } from '../../services/desk-api.service';
+import { response } from 'express';
+import { LoginService } from '../../login/login.service';
 
 @Component({
   selector: 'app-home-view',
@@ -11,7 +13,8 @@ import { DeskApiService } from '../../services/desk-api.service';
 export class HomeViewComponent implements OnInit {
   constructor(
     private homeService: HomeService,
-    private apiDeskService: DeskApiService
+    private apiDeskService: DeskApiService,
+    private loginService: LoginService
   ) {
     this.getDeskPosition();
   }
@@ -32,6 +35,7 @@ export class HomeViewComponent implements OnInit {
   curProfile!: Profile;
   sittingTimer: any;
   standingTimer: any;
+  editMode!: boolean;
 
   private intervalId: any;
   private holdTime: number = 200;
@@ -72,7 +76,6 @@ export class HomeViewComponent implements OnInit {
   async updateDeskHeight(newHeight: number) {
     //makes it so the desk height is not for example 68.00000000000001
     newHeight = parseFloat(newHeight.toFixed(1));
-    this.curDeskHeight = newHeight;
     console.log('Desk height:', newHeight); // Debugging line
 
     await this.apiDeskService.updateDeskPosition(newHeight).subscribe({
@@ -83,6 +86,7 @@ export class HomeViewComponent implements OnInit {
         console.error('Failed to update desk position:', error);
       },
     });
+    this.curDeskHeight = newHeight;
   }
 
   increaseHeight() {
@@ -104,6 +108,7 @@ export class HomeViewComponent implements OnInit {
     this.holdTime = 75;
 
     this.intervalId = setInterval(() => {
+      this.curDeskHeight += 0.1;
       this.increaseHeight();
       this.holdTime = Math.max(20, this.holdTime - 20);
       this.clearAndRestartInterval(() => this.onHoldIncrease());
@@ -114,9 +119,8 @@ export class HomeViewComponent implements OnInit {
   onHoldDecrease() {
     this.clearInterval();
     this.holdTime = 75;
-
     this.intervalId = setInterval(() => {
-      this.decreaseHeight();
+      this.curDeskHeight -= 0.1;
       this.holdTime = Math.max(20, this.holdTime - 20);
       this.clearAndRestartInterval(() => this.onHoldDecrease());
     }, this.holdTime);
@@ -137,7 +141,7 @@ export class HomeViewComponent implements OnInit {
 
   /* PROFILE FORM CONTROL */
 
-  createProfilePopUp() {
+  profilePopUp() {
     this.isFormVisible = !this.isFormVisible;
   }
 
@@ -173,10 +177,16 @@ export class HomeViewComponent implements OnInit {
     return true;
   }
 
-  /* CREATE PROFILE LOGIC */
+  saveButtonHandler() {
+    if(!this.editMode) {
+      this.saveProfile();
+    }
+  }
+
+  /* CRUD PROFILE LOGIC */
 
   saveProfile() {
-    if(this.isFormValid()) {
+    if (this.isFormValid()) {
       const newProfile = this.createProfile();
       if (this.checkForDuplicateProfile(newProfile)) {
         alert('Profile already exists');
@@ -192,53 +202,167 @@ export class HomeViewComponent implements OnInit {
       this.isFormVisible = false;
     }
   }
-  
 
   createProfile(): Profile {
-    const time = `${this.hours}h ${this.minutes}m`;
-    const timeStanding = `${this.hoursStanding}h ${this.minutesStanding}m`;
-    if (this.profileTitle === '') {
-      this.profileTitle = 'No Title';
+    const userid = this.loginService.getUserId();
+    if (userid) {
+      const { timerStanding, timerSitting } = this.getTimersString();
+
+      if (this.profileTitle === '') {
+        this.profileTitle = 'No Title';
+      }
+      const newProfile: Profile = {
+        userId: userid,
+        title: this.profileTitle,
+        deskHeight: this.height,
+        timer_sitting: timerSitting,
+        timer_standing: timerStanding,
+      };
+      console.log('Creating profile...');
+      this.homeService
+        .createProfile(
+          newProfile.userId,
+          newProfile.title,
+          newProfile.deskHeight,
+          newProfile.timer_sitting ?? '',
+          newProfile.timer_standing ?? ''
+        )
+        .subscribe({
+          next: (response) => {
+            newProfile.profileid = response.profileid;
+            console.log('Profile created successfully:', response);
+          },
+          error: (error) => {
+            console.error('Error creating profile:', error);
+          },
+        });
+      return newProfile;
+    } else {
+      alert('You are not logged in.');
+      throw new Error('User is not logged in');
     }
-    const newProfile: Profile = {
-      userId: 1,
-      title: this.profileTitle,
-      deskHeight: this.height,
-      timer_sitting: time,
-      timer_standing: timeStanding,
-    };
-    console.log('Creating profile...');
-    this.homeService
-      .createProfile(
-        newProfile.userId,
-        newProfile.title,
-        newProfile.deskHeight,
-        newProfile.timer_sitting ?? '',
-        newProfile.timer_standing ?? ''
-      )
-      .subscribe({
-        next: (response) => {
-          newProfile.profileid = response.profileid;
-          console.log('Profile created successfully:', response);
-        },
-        error: (error) => {
-          console.error('Error creating profile:', error);
-        },
-      });
-    return newProfile;
   }
 
   checkForDuplicateProfile(newProfile: Profile): boolean {
-    return this.profiles.concat(this.defaultProfiles).some(profile =>
-      profile.userId === newProfile.userId &&
-      profile.title === newProfile.title &&
-      profile.deskHeight === newProfile.deskHeight &&
-      profile.timer_sitting === newProfile.timer_sitting &&
-      profile.timer_standing === newProfile.timer_standing
-    );
+    return this.profiles
+      .concat(this.defaultProfiles)
+      .some(
+        (profile) =>
+          profile.userId === newProfile.userId &&
+          profile.title === newProfile.title &&
+          profile.deskHeight === newProfile.deskHeight &&
+          profile.timer_sitting === newProfile.timer_sitting &&
+          profile.timer_standing === newProfile.timer_standing
+      );
   }
 
-  /* PROFILE SELECTION */
+  editProfile(id: number, list: 'default' | 'timed') {
+    let profile: Profile | undefined;
+
+    if (list === 'default') {
+      profile = this.defaultProfiles[id];
+    } else if (list === 'timed') {
+      profile = this.profiles[id];
+    }
+
+    if (!profile) {
+      console.error('Profile not found');
+      return;
+    }
+
+    // Update the form with the profile values and show it
+    this.editMode = true;
+    this.updateForm(profile);
+    this.profilePopUp();
+
+    console.log('Attempting to edit profile:', profile);
+    this.homeService
+      .updateProfile(
+        Number(this.profileid),
+        profile.userId,
+        profile.title,
+        profile.deskHeight,
+        profile.timer_sitting ?? '',
+        profile.timer_standing ?? ''
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Profile updated successfully:', response);
+          const index = this.profiles.findIndex(
+            (profile) => profile.profileid === Number(this.profileid)
+          );
+          if (index !== -1) {
+            this.profiles[index] = {
+              ...profile,
+              profileid: Number(this.profileid),
+            };
+          }
+          this.clearForm();
+          this.isFormVisible = false;
+        },
+        error: (error) => {
+          console.error('Error updating profile:', error);
+        },
+      });
+  }
+
+  clearForm() {
+    this.profileid = '';
+    this.profileTitle = '';
+    this.height = 68;
+    this.hours = 0;
+    this.minutes = 0;
+    this.hoursStanding = 0;
+    this.minutesStanding = 0;
+    this.editMode = false;
+  }
+
+  updateForm(profile: Profile) {
+    this.profileid = profile.profileid?.toString() || '';
+    this.profileTitle = profile.title;
+    this.height = profile.deskHeight;
+    const {hours, minutes } = this.homeService.calcHrsMins(profile.timer_sitting ?? '');
+    this.hours = hours;
+    this.minutes = minutes;
+    const {hours: hoursStanding, minutes: minuteStanding} = this.homeService.calcHrsMins(profile.timer_standing ?? '');    
+    this.hoursStanding = hoursStanding;
+    this.minutesStanding = minuteStanding;
+  }
+
+  async deleteProfile(index: number, list: 'default' | 'timed') {
+    if (list === 'timed') {
+      this.removeProfile(index, this.profiles);
+    } else if (list === 'default') {
+      this.removeProfile(index, this.defaultProfiles);
+    } else {
+      alert('Error removing profile');
+      console.error('Error removing profile');
+    }
+  }
+
+  async removeProfile(index: number, array: Profile[]) {
+    const profileid = array[index].profileid;
+    console.log('Profile ID:', profileid);
+    if (profileid !== undefined) {
+      await this.homeService.deleteProfile(profileid).subscribe({
+        next: () => {
+          array.splice(index, 1);
+        },
+        error: (error) => console.error('Error deleting profile:', error),
+      });
+    } else {
+      console.error('Profile ID is undefined');
+    }
+  }
+
+  getTimersString(): {timerStanding: string, timerSitting: string} {
+    const timerSitting = `${this.hours}h ${this.minutes}m`;
+    const timerStanding = `${this.hoursStanding}h ${this.minutesStanding}m`;
+    return {timerStanding, timerSitting};
+  }
+
+
+  /* PROFILE SELECTION / TIMERS */
 
   profileSelected(profile: Profile) {
     console.log('Profile selected:', profile.title);
@@ -322,85 +446,6 @@ export class HomeViewComponent implements OnInit {
     } catch (error) {
       alert('Error starting standing timer');
       console.error('Error starting standing timer:', error);
-    }
-  }
-
-  /* EDIT & REMOVE PROFILE LOGIC */
-
-  editProfile(id: number) {
-    this.isFormVisible = true;
-    const profile = this.profiles[id];
-    this.homeService
-      .updateProfile(
-        Number(this.profileid),
-        profile.userId,
-        profile.title,
-        profile.deskHeight,
-        profile.timer_sitting ?? '',
-        profile.timer_standing ?? ''
-      )
-      .subscribe({
-        next: (response) => {
-          console.log('Profile updated successfully:', response);
-          const index = this.profiles.findIndex(
-            (profile) => profile.profileid === Number(this.profileid)
-          );
-          if (index !== -1) {
-            this.profiles[index] = {
-              ...profile,
-              profileid: Number(this.profileid),
-            };
-          }
-          this.clearForm();
-          this.isFormVisible = false;
-        },
-        error: (error) => {
-          console.error('Error updating profile:', error);
-        }
-      });
-  }
-
-  clearForm() {
-    this.profileid = '';
-    this.profileTitle = '';
-    this.height = 68;
-    this.hours = 0;
-    this.minutes = 0;
-    this.hoursStanding = 0;
-    this.minutesStanding = 0;
-  }
-
-  async removeProfile(index: number, list: 'default' | 'timed') {
-    console.log('Removing profile:', index);
-    console.log('Profile:', this.profiles[index]);
-    if (list === 'timed') {
-      const profileid = this.profiles[index].profileid;
-      console.log('Profile ID:', profileid);
-      if (profileid !== undefined) {
-        await this.homeService.deleteProfile(profileid).subscribe({
-          next: () => {
-            this.profiles.splice(index, 1);
-          },
-          error: (error) => console.error('Error deleting profile:', error),
-        });
-      } else {
-        console.error('Profile ID is undefined');
-      }
-    } else if (list === 'default') {
-      const profileid = this.defaultProfiles[index].profileid;
-      console.log('Profile ID:', profileid);
-      if (profileid !== undefined) {
-        await this.homeService.deleteProfile(profileid).subscribe({
-          next: () => {},
-          error: (error) => console.error('Error deleting profile:', error),
-        });
-        this.defaultProfiles.splice(index, 1);
-      } else {
-        console.error('Profile ID is undefined');
-      }
-    } else {
-      alert('Error removing profile');
-      console.error('Error removing profile');
     }
   }
 }

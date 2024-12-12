@@ -18,17 +18,17 @@
         </section>
     </div>
     <div>
-    <button class="button" id="add-profile-button" (click)="createProfilePopUp()">Add Profile</button>
+    <button class="button" id="add-profile-button" (click)="profilePopUp()">Add Profile</button>
     <section id="profiles-section">
         <div *ngIf="isFormVisible" class="create-profile-popup">
             <div id="create-profile">
-                <button (click)="createProfilePopUp()" class="delete-button" id="close-create">x</button>
+                <button (click)="profilePopUp()" class="delete-button" id="close-create">x</button>
                 <p id="title">Profile title:</p>
-                <input id="title-input" [(ngModel)]="profileTitle" type="text" placeholder="No Title" minlength="5" maxlength="15">
+                <input id="title-input" [(ngModel)]="profileTitle" name="profileTitle" type="text" placeholder="No Title" minlength="5" maxlength="15">
 
                 <div id="set-height">
                     <label for="height-slider">Table height: <span class="height-value">{{height}}cm</span></label>
-                    <input id="height-slider" [(ngModel)]="height" type="range" min="68" max="132" step="1" />
+                    <input id="height-slider" [(ngModel)]="height" name="height" type="range" min="68" max="132" step="1" />
                 </div>
                 
                 <p class="stand">Change desk height to <span class="height-value">{{height}}cm </span> every:</p>
@@ -57,7 +57,7 @@
                         [(ngModel)]="minutesStanding" (ngModelChange)="validateMinutes()"/>
                     </div>
                 </form>
-                <button class="button" id="save-profile-button" (click)="saveProfile()">Save</button>
+                <button class="button" id="save-profile-button" (click)="saveButtonHandler()">Save</button>
             </div>
         </div>
         <div class="profiles-container">
@@ -66,10 +66,10 @@
                 <div *ngFor="let profile of defaultProfiles; let i = index" class="profile" [class.selected]="profile.selected" (click)="profileSelected(profile)">
                     <div class="title-and-button">
                         <h6>{{ profile.title }}</h6>
-                        <button class="delete-button" (click)="removeProfile(i, 'default'); $event.stopPropagation()">x</button>
+                        <button class="delete-button" (click)="removeProfile(i, defaultProfiles); $event.stopPropagation()">x</button>
                     </div>
                     <p>Height: {{ profile.deskHeight }}cm</p>
-                    <button class="button" (click)="editProfile(i); $event.stopPropagation()">Edit</button>
+                    <button class="button" (click)="editProfile(i, 'default'); $event.stopPropagation()">Edit</button>
                 </div>
             </div>
             <h5 class="profile-type-text">Profiles with timer</h5>
@@ -78,12 +78,12 @@
                 [class.selected]="profile.selected"  (click)="profileSelected(profile)">
                     <div class="title-and-button">
                         <h6>{{ profile.title }}</h6>
-                        <button class="delete-button" (click)="removeProfile(i, 'timed'); $event.stopPropagation()">x</button>
+                        <button class="delete-button" (click)="removeProfile(i, profiles); $event.stopPropagation()">x</button>
                     </div>
                     <p>Height: {{ profile.deskHeight }}cm</p>
                     <p>Desk rises every: {{ profile.timer_sitting }}</p>
                     <p>Stand for: {{ profile.timer_standing }}</p>
-                    <button class="button" (click)="editProfile(i); $event.stopPropagation()">Edit</button>
+                    <button class="button" (click)="editProfile(i, 'timed'); $event.stopPropagation()">Edit</button>
                 </div>
             </div>
         </div>

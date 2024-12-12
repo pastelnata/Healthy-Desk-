@@ -8,30 +8,13 @@
             <div>
                 <div id="month-analytics">
                     <h5>Last 3 Months</h5>
-                    <div class="month-container">
-                        <div id="title">
-                            <h6>{{curMonth}}</h6>
+                        <div class="month-container" *ngFor="let analytics of monthAnalytics; let i = index">
+                            <div id="title">
+                              <h6>{{ monthNames[(curDate.getMonth() - i + 12) % 12] }}</h6>
+                            </div>
+                            <p>Average standing hours/day: {{ analytics.avgStandingHrs.toFixed(2) }}</p>
+                            <p>Times Moved: {{ analytics.totalTimesMoved }}</p>
                         </div>
-                        <p>Average standing hours/day: </p>
-                        <p>Times Moved: </p>
-                        <p>Average calories burnt: </p>
-                    </div>
-                    <div class="month-container">
-                        <div id="title">
-                            <h6>{{prevMonth}}</h6>
-                        </div>
-                        <p>Average standing hours/day: </p>
-                        <p>Times Moved: </p>
-                        <p>Average calories burnt: </p>
-                    </div>
-                    <div class="month-container">
-                        <div id="title">
-                            <h6>{{twoMonthsAgo}}</h6>
-                        </div>
-                        <p>Average standing hours/day: </p>
-                        <p>Times Moved: </p>
-                        <p>Average calories burnt: </p>
-                    </div>
                 </div>
             </div>
         </section>
