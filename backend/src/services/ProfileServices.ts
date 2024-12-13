@@ -1,9 +1,13 @@
 import Profile from "../models/ProfileModel";
 
 class ProfileServices {
-  static async getProfiles() {
+  static async getProfiles(userid: number) {
     try {
-      const profiles = await Profile.findAll();
+      const profiles = await Profile.findAll({
+        where: {
+          userid: userid,
+        },
+      });
       return profiles;
     } catch (error) {
       console.error("Error fetching profiles:", error);

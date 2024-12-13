@@ -12,7 +12,7 @@ import { time } from 'highcharts';
 @Injectable({
   providedIn: 'root',
 })
-export class HomeService {
+export class HomeService implements OnInit {
   hours: number = 0;
   minutes: number = 0;
   hoursStanding: number = 0;
@@ -30,6 +30,10 @@ export class HomeService {
     private http: HttpClient,
     private loginService: LoginService
   ) {}
+
+  ngOnInit(): void {
+      this.getAllProfiles();
+  }
 
   validateHours(hours: number) {
     if (hours > 23) hours = 23;
@@ -115,11 +119,14 @@ export class HomeService {
 
   getAllProfiles(): Observable<Profile[]> {
     const userid = this.loginService.getUserId();
-    return this.http.get<Profile[]>(`${this.apiUrl}/${userid}/profiles`).pipe(
+    console.log('Fetching profiles for user:', userid);
+    return this.http.get<Profile[]>(`${this.apiUrl}/profiles/${userid}`).pipe(
       tap((response) => {
+        console.log(response);
         response.forEach((profile) => {
           if (this.isDefaultProfile(profile)) {
             this.defaultProfiles.push(profile);
+            console.log('Default profiles:', this.defaultProfiles);
           } else {
             this.profiles.push(profile);
           }

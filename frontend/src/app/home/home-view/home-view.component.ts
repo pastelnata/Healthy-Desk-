@@ -40,9 +40,9 @@ export class HomeViewComponent implements OnInit {
   private intervalId: any;
   private holdTime: number = 200;
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // Loads the profiles stored in the db
-    this.homeService.getAllProfiles().subscribe({
+    await this.homeService.getAllProfiles().subscribe({
       next: (response: Profile[]) => {
         console.log('Profiles loaded successfully:', this.homeService.profiles);
         this.defaultProfiles = this.homeService.defaultProfiles;

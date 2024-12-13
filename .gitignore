@@ -91,3 +91,4 @@ Thumbs.db
 # System-specific files
 /desk-simulator/.DS_Store
 /desk-simulator/Thumbs.db
+/desk-simulator/simulator/__pycache__/*

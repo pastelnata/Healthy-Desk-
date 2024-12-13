@@ -7,6 +7,7 @@ import { Profile } from '../models/ProfileModel';
 import { User } from '../models/UserModel';
 import { AlertService } from '../alert/alert.service';
 import { LoginService } from '../login/login.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,8 @@ export class RegisterService {
     private http: HttpClient,
     private homeService: HomeService,
     private alertService: AlertService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) {}
 
   /* REGISTER USER */
@@ -69,6 +71,7 @@ export class RegisterService {
           console.log('User created successfully:', response.token);
           localStorage.setItem('token', response.token);
           await this.registerProfiles(height);
+          this.router.navigate(['']);
           return response.token;
         }),
         catchError((error) => {
@@ -109,9 +112,9 @@ export class RegisterService {
     console.log('current user:', curUser);
     if (curUser) {
       console.log('registering profiles...');
-      this.newStandingProfile(userHeight, curUser, headers);
-      this.newSittingDefault(userHeight, curUser, headers);
-      this.newStandingDefault(userHeight, curUser, headers);
+      await this.newStandingProfile(userHeight, curUser, headers);
+      await this.newSittingDefault(userHeight, curUser, headers);
+      await this.newStandingDefault(userHeight, curUser, headers);
     }
   }
 
@@ -146,8 +149,7 @@ export class RegisterService {
       userId: userid,
     };
     await this.http.post(`${this.apiUrl}/${userid}/profiles`, newProfile, { headers }).subscribe({
-      next: (response) => {
-        this.homeService.profiles.push(newProfile);
+      next: async (response) => {
         console.log('Profile created:', response);
       },
       error: (error) => {
@@ -169,8 +171,7 @@ export class RegisterService {
     await this.http.post(`${this.apiUrl}/${userid}/profiles`, newProfile, {
       headers,
     }).subscribe({
-      next: (response) => {
-        this.homeService.defaultProfiles.push(newProfile);
+      next: async (response) => {
         console.log('Profile created:', response);
       },
       error: (error) => {
@@ -188,8 +189,7 @@ export class RegisterService {
     await this.http.post(`${this.apiUrl}/${userid}/profiles`, newProfile, {
       headers,
     }).subscribe({
-      next: (response) => {
-        this.homeService.defaultProfiles.push(newProfile);
+      next: async (response) => {
         console.log('Profile created:', response);
       },
       error: (error) => {
