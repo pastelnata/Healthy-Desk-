@@ -1,8 +1,6 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Profile } from '../models/ProfileModel';
-import { BehaviorSubject } from 'rxjs';
 import { HomeService } from '../home/home.service';
-import { NextFunction } from 'express';
 import { DeskApiService } from './desk-api.service';
 import { LoginService } from '../login/login.service';
 
@@ -10,12 +8,11 @@ import { LoginService } from '../login/login.service';
   providedIn: 'root',
 })
 export class TimerService {
-  standingTimer: any;
-  sittingTimer: any;
   worker!: Worker;
   curProfile!: Profile;
   isStanding: boolean = false;
   sittingHeight!: number;
+  isWorkerActive: boolean = false;
 
   constructor(
     private homeService: HomeService,
@@ -27,6 +24,7 @@ export class TimerService {
       this.worker = new Worker(new URL('./timer.worker', import.meta.url));
       this.worker.onmessage = ({ data }) => {
         console.log(`page got message: ${JSON.stringify(data)}`);
+        this.isWorkerActive = true;
         this.timerCompleteHandler(data.action);
       };
     } else {
@@ -34,6 +32,10 @@ export class TimerService {
       // Web Workers are not supported in this environment.
       // You should add a fallback so that your program still executes correctly.
     }
+  }
+
+  checkWorkerStatus(): boolean {
+    return this.isWorkerActive;
   }
 
   async getSelectedProfile(): Promise<Profile | null> {
@@ -59,7 +61,7 @@ export class TimerService {
     const profile = await this.getSelectedProfile();
     if (!profile) {
       console.error('Error: Profile not loaded');
-      throw Error;
+      throw new Error;
     }
     this.sittingHeight = this.loginService.getUserHeight() * 0.43;
     this.curProfile = profile;
@@ -98,10 +100,10 @@ export class TimerService {
       const { hours, minutes } = this.homeService.calcHrsMins(
         this.curProfile.timer_sitting ?? ''
       );
-      const timerSitting = (hours * 60 + minutes) * 60 * 200;
+      const timerSitting = (hours * 60 + minutes) * 60 * 1000;
       if(timerSitting === 0) {
         alert('Please try again');
-        throw Error;
+        throw new Error;
       }
 
       // starts the timer in the background
@@ -129,7 +131,7 @@ export class TimerService {
       const { hours, minutes } = this.homeService.calcHrsMins(
         this.curProfile.timer_standing ?? ''
       );
-      const timerStanding = (hours * 60 + minutes) * 60 * 200;
+      const timerStanding = (hours * 60 + minutes) * 60 * 1000;
       if(timerStanding === 0) {
         alert('Please try again');
         throw Error;
