@@ -4,7 +4,8 @@ import { Response, Request } from "express";
 class ProfileController {
     async getProfiles(req: Request, res: Response) {
         try {
-            const profiles = await ProfileServices.getProfiles();
+            const {userid} = req.params;
+            const profiles = await ProfileServices.getProfiles(parseInt(userid));
             res.json(profiles);
         } catch (error) {
             console.error('Error fetching profiles:', error);

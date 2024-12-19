@@ -42,7 +42,6 @@ export class RegisterComponent {
           console.error('Error registering user:', error);
         });
         //this.registerService.registerDefaultProfile(this.hours, this.minutes, this.height);
-        this.router.navigate(['']);
       }  
     }
   }

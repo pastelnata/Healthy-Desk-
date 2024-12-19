@@ -4,7 +4,7 @@ import ProfileController from "../controllers/ProfileController";
 const profileRoutes = express.Router();
 const profileController = new ProfileController();
 
-profileRoutes.get("/:userid/profiles", profileController.getProfiles);
+profileRoutes.get("/profiles/:userid", (req,res) => profileController.getProfiles(req, res));
 
 profileRoutes.post("/:userid/profiles", async (req: Request, res: Response) => {
   try {
