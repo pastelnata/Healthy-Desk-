@@ -16,6 +16,8 @@ class User extends Model implements IUser {
     public password!: string;
     public height!: number;
     public mot_lvl!: 'low' | 'medium' | 'high';
+    public score!: number;
+    public score_date!: Date;
     public alert_streak!: number;
     public longest_streak!: number;
     public cur_profile!: number;
