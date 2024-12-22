@@ -39,7 +39,7 @@ CREATE TABLE "Day" (
 );
 
 /* MOCK DATA */
-INSERT INTO "User" (username, "password", email, height, mot_lvl, score, score_date, alert_streak, longest_streak, cur_profile) VALUES
+INSERT INTO "User" (username, "password", email, height, mot_lvl, score, score_date, alert_streak, longest_streak) VALUES
 ('user1', 'password1', 'user1@example.com', 170, 'medium', 100, '2023-01-01', 5, 10),
 ('user2', 'password2', 'user2@example.com', 165, 'high', 200, '2023-02-01', 10, 20),
 ('user3', 'password3', 'user3@example.com', 180, 'low', 150, '2023-03-01', 7, 15),
