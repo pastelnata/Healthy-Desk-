@@ -16,8 +16,6 @@ class User extends Model implements IUser {
     public password!: string;
     public height!: number;
     public mot_lvl!: 'low' | 'medium' | 'high';
-    public avg_standing_hrs!: number;
-    public times_moved!: number;
     public alert_streak!: number;
     public longest_streak!: number;
     public cur_profile!: number;
@@ -61,13 +59,13 @@ User.init(
             type: DataTypes.ENUM('low', 'medium', 'high'),
             allowNull: false,
         },
-        avg_standing_hrs: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
+        score: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0, 
         },
-        times_moved: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
+        score_date: {
+            type: DataTypes.DATE,
+            defaultValue: new Date(),
         },
         alert_streak: {
             type: DataTypes.INTEGER,
