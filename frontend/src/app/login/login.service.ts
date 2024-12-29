@@ -27,6 +27,13 @@ export class LoginService {
   ): Observable<{ success: boolean; token: string }> {
     const body = { username, password };
 
+    // Check if the username belongs to a manager or user
+    let loginUrl = `${this.apiUrl}/user`; // Default user login endpoint
+    // If the username matches one in the Manager table, use manager login
+    if (username === 'manager' || username === 'manager2' || username === 'manager3') {
+      loginUrl = `${this.apiUrl}/manager`;  // Endpoint for managers
+    }
+
     return this.http
       .post<{ success: boolean; token: string }>(`${this.apiUrl}/user`, body)
       .pipe(
