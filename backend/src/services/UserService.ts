@@ -55,8 +55,6 @@ class UserService {
         password,
         height,
         mot_lvl,
-        avg_standing_hrs: 0, // Default value
-        times_moved: 0, // Default value
       });
       console.log("User created:", newUser);
       return newUser.generateToken();

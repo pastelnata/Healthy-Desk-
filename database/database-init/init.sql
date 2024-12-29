@@ -5,13 +5,12 @@ CREATE TABLE "User" (
     email VARCHAR(255) NOT NULL,
     height INT NOT NULL,
     mot_lvl VARCHAR(10) CHECK (mot_lvl IN ('low', 'medium', 'high')),
-    avg_standing_hrs INT,
-    times_moved INT,
-    avg_times_moved INT,
+    score INT,
+    score_date DATE,
     alert_streak INT,
     longest_streak INT,
     cur_profile INT
-    );
+);
 
 CREATE TABLE Profile (
     profileid SERIAL PRIMARY KEY,
@@ -40,8 +39,12 @@ CREATE TABLE "Day" (
 );
 
 /* MOCK DATA */
-INSERT INTO "User" (username, "password", email, height, mot_lvl, alert_streak, longest_streak) VALUES 
-    ('user1', 'password1', 'user1@gmail.com', 180, 'low', 21, 32);
+INSERT INTO "User" (username, "password", email, height, mot_lvl, score, score_date, alert_streak, longest_streak) VALUES
+('user1', 'password1', 'user1@example.com', 170, 'medium', 100, '2023-01-01', 5, 10),
+('user2', 'password2', 'user2@example.com', 165, 'high', 200, '2023-02-01', 10, 20),
+('user3', 'password3', 'user3@example.com', 180, 'low', 150, '2023-03-01', 7, 15),
+('user4', 'password4', 'user4@example.com', 175, 'medium', 120, '2023-04-01', 6, 12),
+('user5', 'password5', 'user5@example.com', 160, 'high', 180, '2023-05-01', 8, 18);
 
 INSERT INTO "Day" (userid, "date", standing_hrs, times_moved) VALUES
     (1, '2024-10-01', 2, 5),
@@ -136,7 +139,6 @@ INSERT INTO "Day" (userid, "date", standing_hrs, times_moved) VALUES
     (1, '2024-12-29', 4, 7),
     (1, '2024-12-30', 2, 5),
     (1, '2024-12-31', 3, 6);
-
     
 
 INSERT INTO Manager (email, username, "password") VALUES 
