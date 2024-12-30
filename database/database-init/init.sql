@@ -22,7 +22,7 @@ CREATE TABLE Profile (
     FOREIGN KEY (userid) REFERENCES "User"(userid)
 );
 
-CREATE TABLE Manager (
+CREATE TABLE "Manager" (
     managerid SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
@@ -141,5 +141,5 @@ INSERT INTO "Day" (userid, "date", standing_hrs, times_moved) VALUES
     (1, '2024-12-31', 3, 6);
     
 
-INSERT INTO Manager (email, username, "password") VALUES 
-    ('user2@gmail.com', 'user2', 'password2');
+INSERT INTO "Manager" (email, username, "password") VALUES 
+    ('manager1@gmail.com', 'manager1', 'password1');
