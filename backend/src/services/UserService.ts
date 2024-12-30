@@ -1,6 +1,8 @@
 import { Manager, User } from "../models/UserModel";
+import bcrypt from 'bcrypt';
 
 class UserService {
+  //get all users
   static async getUsers() {
     try {
       const users = await User.findAll();
@@ -14,8 +16,10 @@ class UserService {
   //Recive user username and password form frontend and check if credentials are correct
   static async loginUser(username: string, password: string) {
     try {
+      //firstly, check for user
       const user = await User.findOne({ where: { username, password } });
       if (!user) {
+      //if its not a regular user, check if its a manager account
         const manager = await Manager.findOne({
           where: { username, password },
         });
@@ -24,16 +28,32 @@ class UserService {
           return null;
         }
         console.log("Manager logged in:", manager.username);
-        return manager.generateToken();
+
+        //compare input password with hashed password
+        const isPasswordValid = await bcrypt.compare(password, manager.password);
+        if (isPasswordValid) {
+          console.log("Invalid password for manager provided");
+          return null;
+        }
+
+        return manager.generateToken(); //return manager token
       }
       console.log("User logged in:", user.username);
-      return user.generateToken();
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        console.log("Invalid password for user provided");
+        return null;
+      }
+
+      return user.generateToken(); //return user token
     } catch (error) {
       console.error("Error in loginUser:", error);
       throw error;
     }
   }
 
+  //create a new user with hashed password
   static async createUser(
     username: string,
     email: string,
@@ -49,10 +69,15 @@ class UserService {
         height,
         mot_lvl,
       });
+
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      
+      //create a new user with hashed password
       const newUser = await User.create({
         username,
         email,
-        password,
+        password: hashedPassword, //store hashed password 
         height,
         mot_lvl,
       });
@@ -64,6 +89,7 @@ class UserService {
     }
   }
 
+  //set current profile
   static async setCurrentProfile(userid: number, profileid: number) {
     try {
       const currentProfile = await User.update(
@@ -84,6 +110,7 @@ class UserService {
     }
   }
 
+  //get current profile
   static async getCurrentProfile(userid: number) {
     try {
       const curUser = await User.findOne({

@@ -39,7 +39,7 @@ To log in, use the following credentials:
 | Account Type         | Username      | Password      |
 |----------------------|---------------|---------------|
 | **User Account**     | user1         | password1     |
-| **Manager Account**  | manager       | password      |
+| **Manager Account**  | manager1      | password1     |
 
 ### Stopping the Applicaion
 

@@ -22,7 +22,7 @@ CREATE TABLE Profile (
     FOREIGN KEY (userid) REFERENCES "User"(userid)
 );
 
-CREATE TABLE Manager (
+CREATE TABLE "Manager" (
     managerid SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
@@ -46,8 +46,8 @@ INSERT INTO "User" (username, "password", email, height, mot_lvl, score, score_d
 ('user4', 'password4', 'user4@example.com', 175, 'medium', 120, '2023-04-01', 6, 12),
 ('user5', 'password5', 'user5@example.com', 160, 'high', 180, '2023-05-01', 8, 18);
 
-INSERT INTO Manager (username, "password", email) VALUES 
-('manager', 'password', 'manager@example.com'),
+INSERT INTO "Manager" (username, "password", email) VALUES 
+('manager1', 'password1', 'manager@example.com'),
 ('manager2', 'password2', 'manager2@example.com'),
 ('manager3', 'password3', 'manager3@example.com');
 
