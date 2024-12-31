@@ -40,16 +40,16 @@ CREATE TABLE "Day" (
 
 /* MOCK DATA */
 INSERT INTO "User" (username, "password", email, height, mot_lvl, score, score_date, alert_streak, longest_streak) VALUES
-('user1', 'password1', 'user1@example.com', 170, 'medium', 100, '2023-01-01', 5, 10),
-('user2', 'password2', 'user2@example.com', 165, 'high', 200, '2023-02-01', 10, 20),
-('user3', 'password3', 'user3@example.com', 180, 'low', 150, '2023-03-01', 7, 15),
-('user4', 'password4', 'user4@example.com', 175, 'medium', 120, '2023-04-01', 6, 12),
-('user5', 'password5', 'user5@example.com', 160, 'high', 180, '2023-05-01', 8, 18);
+('user1', '$2b$10$58ozvDmyJNdXHF9KHfLuAeVSAbIVDElyGENr.HU9CqK3tXwqMFSm2', 'user1@example.com', 170, 'medium', 100, '2023-01-01', 5, 10),
+('user2', '$2b$10$C8Pw.XckhgHyqI613LFQ.O2T.DsE5lX0slNdBjFxzZZVX8jA6mpxO', 'user2@example.com', 165, 'high', 200, '2023-02-01', 10, 20),
+('user3', '$2b$10$uF4pvNQlm95NEeKea2ZFpO7J0dZk71Rp6L8F6L5m6wZthl0zAK8Jq', 'user3@example.com', 180, 'low', 150, '2023-03-01', 7, 15),
+('user4', '$2b$10$71RiCwpScE0.uazgNLmSXeFQmZycSPEEYNVh6qyzy7vI31EMu4CgK', 'user4@example.com', 175, 'medium', 120, '2023-04-01', 6, 12),
+('user5', '$2b$10$/HsgAlT5aiRHvCcMj8BD..us4BOkM6ZGk/yLEVYDZgIOG3Yqk3dPW', 'user5@example.com', 160, 'high', 180, '2023-05-01', 8, 18);
 
 INSERT INTO "Manager" (username, "password", email) VALUES 
-('manager1', 'password1', 'manager@example.com'),
-('manager2', 'password2', 'manager2@example.com'),
-('manager3', 'password3', 'manager3@example.com');
+('manager1', '$2b$10$HH.GIfynXvaSiAL2VeE3kO7siaYGFhivaXF0ktjgeX9WC5xEEpV9q', 'manager@example.com'),
+('manager2', '$2b$10$2mytt8ybRjscBv1Yj.HX8OjDQnFtS8D/2mlKsTShUKlssB3C4lh1a', 'manager2@example.com'),
+('manager3', '$2b$10$E/5Cb3pU5dXbbt6Z18Oi8eXfls9Il9PwneXax.EhC0/JHO.sTu5qS', 'manager3@example.com');
 
 INSERT INTO Profile (userid, title, "deskHeight", timer_standing, timer_sitting)
 VALUES
