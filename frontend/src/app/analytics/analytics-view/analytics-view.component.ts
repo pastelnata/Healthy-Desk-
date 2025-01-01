@@ -140,8 +140,8 @@ export class AnalyticsViewComponent implements OnInit {
           type: 'pie',
           name: 'Time Distribution',
           data: [
-            { name: 'Standing', y: 40, color: '#84C6DC' },
-            { name: 'Sitting', y: 60, color: '#B3E0F3' },
+            { name: 'Standing', y: 39.7, color: '#84C6DC' },
+            { name: 'Sitting', y: 60.3, color: '#B3E0F3' },
           ],
         },
       ],
