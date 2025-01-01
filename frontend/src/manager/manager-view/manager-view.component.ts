@@ -53,6 +53,9 @@ export class ManagerViewComponent implements OnInit {
           fontWeight: 'bold'
         }
       },
+      credits: {
+        enabled: false,
+      },
       xAxis: {
         type: 'datetime',
         labels: {
