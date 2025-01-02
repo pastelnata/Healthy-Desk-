@@ -1,15 +1,20 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
-/dist
+/frontend/dist
+/backend/dist
 /tmp
 /out-tsc
 /bazel-out
+/dist
 
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
+/node_modules
+/backend/node_modules
+/frontend/node_modules
 
 # IDEs and editors
 .idea/
@@ -21,7 +26,7 @@ yarn-error.log
 *.sublime-workspace
 
 # Visual Studio Code
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -43,3 +48,47 @@ Thumbs.db
 
 # Database sensitive info
 .env
+
+# Angular
+.angular
+
+
+# git ignore for python simulator
+# Byte-compiled files
+/desk-simulator/__pycache__/
+/desk-simulator/*.py[cod]
+/desk-simulator/*$py.class
+
+# Virtual environment directories
+/desk-simulator/env/
+/desk-simulator/.env/
+
+# Distribution / packaging
+/desk-simulator/build/
+/desk-simulator/dist/
+
+# pyenv
+/desk-simulator/.python-version
+
+# MyPy cache
+/desk-simulator/.mypy_cache/
+
+# Logs and temporary files
+/desk-simulator/*.log
+/desk-simulator/*.tmp
+/desk-simulator/*.temp
+/desk-simulator/*.bak
+/desk-simulator/*.swp
+/desk-simulator/*.swo
+/desk-simulator/.DS_Store
+/desk-simulator/*.~undo-tree~
+
+# IDE-specific files
+/desk-simulator/.idea/
+/desk-simulator/*.sublime-project
+/desk-simulator/*.sublime-workspace
+
+# System-specific files
+/desk-simulator/.DS_Store
+/desk-simulator/Thumbs.db
+/desk-simulator/simulator/__pycache__/*

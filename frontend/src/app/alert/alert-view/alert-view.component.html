@@ -5,7 +5,7 @@
     <div 
         class="popover-container">
         <button
-            class="button button1">Turn alerts on/off <!--state dependent-->
+            class="button button1" (click)="sendAlert1()">Turn alerts on/off <!--state dependent-->
         </button><br>
     </div>
 
@@ -14,7 +14,7 @@
         <button
             class="button button2"
             popovertarget="MotivationLevel1"
-            popovertargetaction="toggle">Motivation level
+            popovertargetaction="toggle"  (click)="sendAlert2()">Motivation level
         </button><br>
         <p popover id="MotivationLevel1">Intense</p>
         <!--<p popover id="MotivationLevel2">Intense</p>-->
@@ -25,7 +25,7 @@
         <button
             class="button button3"
             popovertarget="AlertIntensity"
-            popovertargetaction="toggle">Alert intensity
+            popovertargetaction="toggle" (click)="sendAlert3()">Alert intensity
         </button>
         <p popover id="AlertIntensity">soft</p>
     </div>

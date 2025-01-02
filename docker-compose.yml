@@ -6,19 +6,17 @@ services:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
-    ports:
-      - "${DATABASE_PORT}:${DATABASE_PORT}" 
     volumes:
       - ./database/database-init:/docker-entrypoint-initdb.d
     networks:
       - app-network
 
   backend:
+    image: healthy-desk-backend:latest
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
-      PORT: ${PORT}
       DATABASE_HOST: database
       DATABASE_PORT: ${DATABASE_PORT}
       DATABASE_USER: ${DATABASE_USER}
@@ -30,16 +28,46 @@ services:
       - database
     networks:
       - app-network
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /Healthy-Desk-/backend
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+
+  # desk-simulator:
+  #   image: healthy-desk-desk-simulator:latest
+  #   build:
+  #     context: .
+  #     dockerfile: desk-simulator/Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - app-network
 
   frontend:
+    image: healthy-desk-frontend:latest
     build:
-      context: ./frontend
+      context: .
+      dockerfile: frontend/Dockerfile
     depends_on:
       - backend
     ports:
       - "4200:4200"
     networks:
       - app-network
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /Healthy-Desk-/frontend
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
 
 volumes:
   postgres-data:

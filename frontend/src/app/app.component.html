@@ -1,9 +1,68 @@
 
 <!-- Header -->
-
-<app-navigation-view *ngIf="isNavigationVisible" (toggleAccountVisibility)="toggleAccountVisibility()" (toggleeStreakVisibility)="toggleeStreakVisibility()"></app-navigation-view>
-<app-streak-popup-view *ngIf="isStreakPopupVisible" (close)="toggleeStreakVisibility()"></app-streak-popup-view>
-<app-account-popup-view *ngIf="isAccountMenuVisible" (close)="toggleAccountVisibility()"></app-account-popup-view>
-<router-outlet></router-outlet>
-
-<!-- Footer -->
+<body>
+    <app-navigation-view *ngIf="isNavigationVisible" (toggleAccountVisibility)="toggleAccountVisibility()" (toggleeStreakVisibility)="toggleeStreakVisibility()"></app-navigation-view>
+    <app-streak-popup-view *ngIf="isStreakPopupVisible" (close)="toggleeStreakVisibility()"></app-streak-popup-view>
+    <app-account-popup-view *ngIf="isAccountMenuVisible" (close)="toggleAccountVisibility()"></app-account-popup-view>
+    <app-alert-popup></app-alert-popup>
+    <router-outlet></router-outlet>
+    <footer>
+        <div class="row">
+          <div class="col">
+            <h5>Contact information</h5>
+            <p>Sønderborg, 6400, Denmark</p>
+            <p class="email-id1">linak-desk&#64;administrator.dk</p>
+            <p class="email-id">healthy-desk&#64;administrator.dk</p>
+            <p>Phone number: +45 12345678</p>
+          </div>
+          <div class="col">
+          <h5>Explore</h5>
+          <ul>
+            <li><a href="">Home</a></li>
+            <li><a href="">Alert</a></li>
+            <li><a href="">Score</a></li>
+            <li><a href="">Analytics</a></li>
+            <li><a href="">Healthy habits</a></li>
+          </ul>
+          </div>
+          <div class="col">
+              <h5>Newsletter</h5> 
+              <form>
+                <input type="email" placeholder="Enter your email address" required>
+              </form>
+              <div class="wrapper">
+                <div class="button">
+                  <div class="icon">
+                    <i class='bx bxl-facebook'></i>
+                  </div>
+                </div>
+              </div>
+              <div class="wrapper">
+                <div class="button">
+                  <div class="icon">
+                    <a href="#"><i class='bx bxl-github'></i></a>
+                  </div>
+                </div>
+              </div>
+              <div class="wrapper">
+                <div class="button">
+                  <div class="icon">
+                    <a href="#"><i class='bx bxl-linkedin-square'></i></a>
+                  </div>
+                </div>
+              </div>
+              <div class="wrapper">
+                <div class="button">
+                  <div class="icon">
+                    <a href="#"><i class='bx bxl-google'></i></a>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <hr>
+        <p class="copyright">©2024 - All Rights Reserved</p>
+      </footer>
+    
+    <!-- Footer -->
+</body>
