@@ -35,4 +35,19 @@ export class AlertPopupComponent implements OnInit {
     }
     return false;
   }
+
+  sendAlert1() {
+    const currentAlertSount = "soft";
+    this.alertService.sendAlert(currentAlertSount);
+  }
+
+  sendAlert2() {
+    const currentAlertSount = "medium";
+    this.alertService.sendAlert(currentAlertSount);
+  }
+
+  sendAlert3() {
+    const currentAlertSount = "hard";
+    this.alertService.sendAlert(currentAlertSount);
+  }
 }
