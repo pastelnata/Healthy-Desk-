@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,11 @@ export class AlertPopupService {
   private showPopUpSubject = new Subject<boolean>();
   showPopUp$ = this.showPopUpSubject.asObservable();
   private alertResponse!: (value: boolean) => void;
+  apiUrl = 'http://192.168.0.104/';
+  buzzerUrl = 'buzzer.cgi?';
+  ledUrl = 'led.cgi?';
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   onAccept(): boolean {
     console.log("Accepted");
@@ -37,6 +41,7 @@ export class AlertPopupService {
   }
 
   displayAlert(): Promise<boolean> {
+    this.sendAlert1();
     console.log('DISPLAYING ALERT');
     this.showPopUpSubject.next(true);
     return new Promise((resolve) => {
@@ -46,5 +51,27 @@ export class AlertPopupService {
 
   hideAlert() {
     this.showPopUpSubject.next(false);
+  }
+  
+  sendAlert(param: string) {
+    console.log('Playing sound...');
+    const url = `${this.apiUrl}${this.buzzerUrl}?${param}`;
+    this.http.get(url)
+      .subscribe();
+  }
+
+  sendAlert1() {
+    const currentAlertSount = "soft";
+    this.sendAlert(currentAlertSount);
+  }
+
+  sendAlert2() {
+    const currentAlertSount = "medium";
+    this.sendAlert(currentAlertSount);
+  }
+
+  sendAlert3() {
+    const currentAlertSount = "hard";
+    this.sendAlert(currentAlertSount);
   }
 }
