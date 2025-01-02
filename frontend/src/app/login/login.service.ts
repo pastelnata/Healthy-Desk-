@@ -26,7 +26,6 @@ export class LoginService {
     password: string
   ): Observable<{ success: boolean; token: string }> {
     const body = { username, password };
-
     return this.http
       .post<{ success: boolean; token: string }>(`${this.apiUrl}/user`, body)
       .pipe(
