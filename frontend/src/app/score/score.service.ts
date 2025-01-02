@@ -1,39 +1,36 @@
 import { Injectable } from '@angular/core';
 import { UserScore } from '../models/user-score';
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
 export class ScoreService {
 
+  constructor(private http: HttpClient) { }
+
   userScore: UserScore[] = [{
-    id: 1,
-    name: 'user1',
+    username: 'user1',
     score: 19
   },
-  {id: 2,
-    name: 'user2',
+  {
+    username: 'user2',
     score: 20
   },
-  {id: 3,
-    name: 'Tomasz',
+  {
+    username: 'Tomasz',
     score: 21
   },
-  {id: 4,   
-    name: 'testUser',
+  {   
+    username: 'testUser',
     score: 22
   },
-  {id: 5,   
-    name: 'Robert',
+  {   
+    username: 'Robert',
     score: 23
   },
   ];
   
-  constructor() { }
-
   getUserScore(): UserScore[] {
     return this.userScore;
   }
-
-
-
 }

@@ -5,6 +5,7 @@ import { ScoreService } from '../score.service';
 import { OnInit } from '@angular/core';
 import { LoginService } from '../../login/login.service';
 import { User } from '../../models/UserModel';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-score-view',
   templateUrl: './score-view.component.html',
@@ -12,7 +13,7 @@ import { User } from '../../models/UserModel';
 })
 export class ScoreViewComponent implements OnInit {
 
-  constructor(private scoreService: ScoreService, private loginService: LoginService) { 
+  constructor(private scoreService: ScoreService, private loginService: LoginService,private http: HttpClient) {
   }
 
   users: UserScore[] = [];
@@ -21,13 +22,14 @@ export class ScoreViewComponent implements OnInit {
   todayScore: number = 21;  
   weekScore: number = 41;
   monthScore: number = 256;
-  userScore: UserScore[] = [];
+
 
   ngOnInit(): void {
     this.loadCurrentUsuerScore();
-    this.users = this.scoreService.getUserScore();
+    // this.users = this.scoreService.getUserScore();
+    this.getDataFromApi();
+    this.loadDataFromApi();
     this.displayUserScoreInOrder();
-
   }
 
   loadCurrentUsuerScore(){
@@ -37,6 +39,21 @@ export class ScoreViewComponent implements OnInit {
     this.todayScore = this.loginService.getUserScore() -166;
 
     
+  }
+
+  getDataFromApi(){
+    return this.http.get('http://localhost:3000/api/users/score');
+  }
+
+  loadDataFromApi(){
+    this.getDataFromApi().subscribe((data: any) => {
+      console.log(data)
+      console.log(data.usersScore);
+      this.users = [];
+      data.usersScore.forEach((userScore: UserScore) => {
+        this.users.push(userScore);
+      });
+    });
   }
 
   displayUserScoreInOrder() {
