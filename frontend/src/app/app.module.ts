@@ -16,6 +16,7 @@ import { TimerService } from './services/timer.service';
 import { ScoreModule } from './score/score.module';
 import { AlertModule } from './alert/alert.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { AlertPopupComponent } from "./alert-popup/alert-popup/alert-popup-view/alert-popup.component";
 
 
 @NgModule({
@@ -29,7 +30,6 @@ import { AnalyticsModule } from './analytics/analytics.module';
     AppRoutingModule,
     HttpClientModule,
     NavigationModule,
-    HomeModule,
     FormsModule,
     AccountPopupModule,
     StreakPopupModule,
@@ -38,7 +38,8 @@ import { AnalyticsModule } from './analytics/analytics.module';
     ScoreModule,
     AlertModule,
     AnalyticsModule,
-  ],
+    AlertPopupComponent
+],
   providers: [TimerService],
   bootstrap: [AppComponent]
 })
