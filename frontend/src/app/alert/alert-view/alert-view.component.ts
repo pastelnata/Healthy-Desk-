@@ -10,7 +10,7 @@ export class AlertViewComponent {
   constructor(private alertService: AlertService) { }
   
   sendAlert1() {
-    const currentAlertSount = "low";
+    const currentAlertSount = "soft";
     this.alertService.sendAlert(currentAlertSount);
   }
 
@@ -19,7 +19,7 @@ export class AlertViewComponent {
     this.alertService.sendAlert(currentAlertSount);
   }
   sendAlert3() {
-    const currentAlertSount = "high";
+    const currentAlertSount = "hard";
     this.alertService.sendAlert(currentAlertSount);
   }
 }
