@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../login.service';
 import { User } from '../../models/UserModel';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-view',
@@ -14,7 +15,7 @@ export class LoginViewComponent implements OnInit {
     this.username = this.loginService.getCurrentUsername();
     this.isManager = this.loginService.getIsManager();
   }
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService, private router: Router) {}
 
   username: string = '';
   password: string = '';
@@ -34,11 +35,11 @@ export class LoginViewComponent implements OnInit {
           if (decodedUser.isManager) {
             console.log('Manager is logged in');
             alert('Login successful!');
-            window.location.href = 'http://localhost:4200/manager';
+            this.router.navigate(['/manager']);
           } else {
             console.log('User is logged in');
             alert('Login successful!');
-            window.location.href = 'http://localhost:4200';
+            this.router.navigate(['/']);
           }
         }
       },

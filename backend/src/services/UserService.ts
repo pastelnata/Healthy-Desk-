@@ -1,6 +1,8 @@
 import { Manager, User } from "../models/UserModel";
+import bcrypt from "bcrypt";
 
 class UserService {
+  //get all users
   static async getUsers() {
     try {
       const users = await User.findAll();
@@ -24,26 +26,50 @@ class UserService {
   //Recive user username and password form frontend and check if credentials are correct
   static async loginUser(username: string, password: string) {
     try {
-      const user = await User.findOne({ where: { username, password } });
-      if (!user) {
-        const manager = await Manager.findOne({
-          where: { username, password },
-        });
-        if (!manager) {
-          console.log("User not found or invalid credentials");
-          return null;
+      // First, check for the user by username
+      const user = await User.findOne({ where: { username } });
+      if (user) {
+        console.log("User found:", user.username);
+
+        // Compare the input password with the stored hashed password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (isPasswordValid) {
+          console.log("User logged in successfully");
+          return user.generateToken(); // Return user token if valid
+        } else {
+          console.log("Invalid password for user");
+          return null; // Invalid password
         }
-        console.log("Manager logged in:", manager.username);
-        return manager.generateToken();
       }
-      console.log("User logged in:", user.username);
-      return user.generateToken();
+
+      // If user is not found, check for manager by username
+      const manager = await Manager.findOne({ where: { username } });
+      if (manager) {
+        console.log("Manager found:", manager.username);
+
+        // Compare the input password with the stored hashed password for manager
+        const isPasswordValid = await bcrypt.compare(
+          password,
+          manager.password
+        );
+        if (isPasswordValid) {
+          console.log("Manager logged in successfully");
+          return manager.generateToken(); // Return manager token if valid
+        } else {
+          console.log("Invalid password for manager");
+          return null; // Invalid password
+        }
+      }
+
+      console.log("User or Manager not found or invalid credentials");
+      return null; // No user or manager found
     } catch (error) {
       console.error("Error in loginUser:", error);
       throw error;
     }
   }
 
+  //create a new user with hashed password
   static async createUser(
     username: string,
     email: string,
@@ -59,10 +85,15 @@ class UserService {
         height,
         mot_lvl,
       });
+
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      //create a new user with hashed password
       const newUser = await User.create({
         username,
         email,
-        password,
+        password: hashedPassword, //store hashed password
         height,
         mot_lvl,
       });
@@ -74,6 +105,7 @@ class UserService {
     }
   }
 
+  //set current profile
   static async setCurrentProfile(userid: number, profileid: number) {
     try {
       const currentProfile = await User.update(
@@ -94,6 +126,7 @@ class UserService {
     }
   }
 
+  //get current profile
   static async getCurrentProfile(userid: number) {
     try {
       const curUser = await User.findOne({
@@ -105,7 +138,7 @@ class UserService {
         const curProfile = curUser.cur_profile;
         console.log("Current profile:", curProfile);
         return curProfile;
-      } 
+      }
       return null;
     } catch (error) {
       console.error("Error fetching current profile:", error);

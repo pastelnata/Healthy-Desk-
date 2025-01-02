@@ -26,7 +26,6 @@ export class LoginService {
     password: string
   ): Observable<{ success: boolean; token: string }> {
     const body = { username, password };
-
     return this.http
       .post<{ success: boolean; token: string }>(`${this.apiUrl}/user`, body)
       .pipe(
@@ -137,6 +136,18 @@ export class LoginService {
       return decodedUser.height;
     } else {
       console.log('Error getting user height. Token is null.');
+      return null;
+    }
+  }
+
+  getUserScore() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedUser: any = jwtDecode(token);
+      console.log(decodedUser.score);
+      return decodedUser.score;
+    } else {
+      console.log('Error getting the score. Token is null.');
       return null;
     }
   }

@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@angular/animations": "^18.2.12",
     "@angular/cli": "^19.0.5",
     "@angular/common": "^18.2.12",
     "@angular/compiler": "^18.2.12",
@@ -29,6 +30,7 @@
     "@types/pg": "^8.11.10",
     "angular-highcharts": "^17.0.1",
     "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -39,11 +41,13 @@
     "pg": "^8.13.1",
     "python3": "^0.0.1",
     "sequelize": "^6.37.5",
+    "ts-node": "^10.9.2",
     "zone.js": "^0.14.10"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.12",
     "@angular/compiler-cli": "^18.2.12",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
