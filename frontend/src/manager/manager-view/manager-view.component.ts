@@ -82,12 +82,18 @@ export class ManagerViewComponent implements OnInit {
           if (this.x) {
             const date = new Date(this.x);
             let tooltip = `<b>${date.toLocaleDateString()}</b><br/>`;
+            const workdayHours = 7.5;
+            
             this.points?.forEach(point => {
               if (point && point.y !== undefined && point.y !== null) {
                 if(point.series.name === 'Avg. Daily Transitions') {
                   tooltip += `${point.series.name}: ${Number(point.y).toFixed(1)}<br/>`;
                 } else {
-                  tooltip += `${point.series.name}: ${Math.round(Number(point.y))} min<br/>`;
+                  const standingHours = Number(point.y) / 60;
+                  const sittingHours = workdayHours - standingHours;
+                  
+                  tooltip += `Standing Time: ${Math.round(point.y)} min (${standingHours.toFixed(1)} hrs)<br/>`;
+                  tooltip += `Sitting Time: ${Math.round(sittingHours * 60)} min (${sittingHours.toFixed(1)} hrs)<br/>`;
                 }
               }
             });
