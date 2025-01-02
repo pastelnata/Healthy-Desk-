@@ -23,7 +23,9 @@ The project aims to develop a smart desk management system that enhances health,
 ### Running the Project with Docker
 
 - **.env File:** Create an .env file in the project's root directory. Further instructions are in the file: .example.env
-- **Start the application using Docker:** Once the .env file is set up and filled in with the correct values, run the following command in the terminal: docker-compose up --build
+- **On the terminal:**
+  1. `cd .\desk-simulator\`
+  2. `python simulator/main.py`
 
 ### Accessing the Application
 
