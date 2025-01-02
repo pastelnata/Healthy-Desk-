@@ -83,11 +83,11 @@ export class ManagerViewComponent implements OnInit {
             const date = new Date(this.x);
             let tooltip = `<b>${date.toLocaleDateString()}</b><br/>`;
             this.points?.forEach(point => {
-              if (point && point.y !== undefined && point.y !== null) {  // Add null checks
+              if (point && point.y !== undefined && point.y !== null) {
                 if(point.series.name === 'Avg. Daily Transitions') {
-                  tooltip += `${point.series.name}: ${Number(point.y).toFixed(1)}<br/>`;  // Convert to Number
+                  tooltip += `${point.series.name}: ${Number(point.y).toFixed(1)}<br/>`;
                 } else {
-                  tooltip += `${point.series.name}: ${Math.round(Number(point.y))} min<br/>`;  // Convert to Number
+                  tooltip += `${point.series.name}: ${Math.round(Number(point.y))} min<br/>`;
                 }
               }
             });

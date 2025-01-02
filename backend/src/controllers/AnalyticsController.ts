@@ -38,22 +38,17 @@ export class AnalyticsController {
   }
 
   async getStandingDistribution(req: Request, res: Response) {
-    // Extract the user ID from the request parameters
     const { userid } = req.params;
 
     try {
-      // Log that we're starting the request
       console.log('Getting standing distribution in controller for user:', userid);
 
-      // Call our service method to get the standing hours data
       const standingData = await AnalyticsService.getStandingDistribution(
-        Number(userid)  // Convert userid to number since it comes as string from params
+        Number(userid)
       );
 
-      // If successful, return the data with a 200 status code
       res.status(200).json(standingData);
     } catch (error) {
-      // If something goes wrong, log the error and send a 500 response
       console.error("Error getting standing distribution:", error);
       res.status(500).send("Error getting standing distribution");
     }

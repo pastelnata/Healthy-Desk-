@@ -111,7 +111,6 @@ export class AnalyticsService {
         }
       });
   
-      // Transform the data using the getter method
       const daysData = days.map(day => ({
         standing_hrs: day.getStandingHrs()
       }));
