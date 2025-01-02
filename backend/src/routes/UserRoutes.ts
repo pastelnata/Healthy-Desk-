@@ -13,6 +13,15 @@ userRoutes.get("/users", async (req: Request, res: Response) => {
   }
 });
 
+userRoutes.get("/users/score", async (req: Request, res: Response) => {
+  try {
+    const usersScore = await userController.getUsersScore(req, res);
+    res.json(usersScore);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 userRoutes.post("/users", async (req: Request, res: Response) => {
   try {
     await userController.createUser(req, res);

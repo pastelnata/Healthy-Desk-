@@ -83,6 +83,17 @@ class UserController {
     }
   }
 
+  
+  async getUsersScore (req: Request, res: Response) {
+    try {
+      const usersScore = await UserService.getUsersScore();
+      res.status(200).json({ usersScore });
+    }catch (error) {
+      console.error("Error fetching users score:", error);
+      res.send(error);
+    }
+  }
+
   async updatePassword (req: Request, res: Response) {
     try {
       const { userId, password } = req.body;
@@ -93,6 +104,8 @@ class UserController {
       res.send(error);
     }
   }
+
+
 }
 
 export default UserController;
