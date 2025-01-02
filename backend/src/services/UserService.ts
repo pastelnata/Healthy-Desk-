@@ -13,6 +13,16 @@ class UserService {
     }
   }
 
+  static async getUsersScore() {
+    try {
+      const usersScore = await User.findAll({ attributes: ["username", "score"], order : [["score", "DESC"]] });
+      return usersScore;
+    } catch (error) {
+      console.error("Error fetching users score:", error);
+      throw error;
+    }
+  }
+
   //Recive user username and password form frontend and check if credentials are correct
   static async loginUser(username: string, password: string) {
     try {
@@ -135,6 +145,29 @@ class UserService {
       throw error;
     }
   }
+
+  static async updatePassword(userid: number, password: string) {
+    try {
+      const result = await User.update(
+        {
+          password: password,
+        },
+        {
+          where: {
+            userid: userid,
+          },
+        }
+      );
+      return "success";
+    } catch (error) {
+      console.error("Error updating password:", error);
+      throw error;
+    }
+  }
+
+  
+
+
 }
 
 export default UserService;

@@ -22,7 +22,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
   declarations: [
     AppComponent,
     LoginViewComponent,
-    RegisterComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

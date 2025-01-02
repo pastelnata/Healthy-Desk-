@@ -3,7 +3,7 @@ import { LoginViewComponent } from './login-view/login-view.component';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { User } from '../models/UserModel';
 import { response } from 'express';
-import { map, Observable, retry } from 'rxjs';
+import { catchError, map, Observable, retry, tap, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -77,7 +77,7 @@ export class LoginService {
       const decodedUser: any = jwtDecode(token);
       return decodedUser.isManager;
     } else {
-      console.log('Error getting isManager permissions. Token is null.');
+      console.log('Error getting isManager. Token is null.');
       return null;
     }
   }
@@ -89,7 +89,7 @@ export class LoginService {
       const decodedUser: any = jwtDecode(token);
       return decodedUser.email;
     } else {
-      console.log('Error getting isManager permissions. Token is null.');
+      console.log('Error getting email. Token is null.');
       return null;
     }
   }
@@ -100,7 +100,7 @@ export class LoginService {
       const decodedUser: any = jwtDecode(token);
       return Number(decodedUser.userid);
     } else {
-      console.log('Error getting userid permissions. Token is null.');
+      console.log('Error getting userid. Token is null.');
       return null;
     }
   }
@@ -112,7 +112,7 @@ export class LoginService {
       const decodedUser: any = jwtDecode(token);
       return decodedUser.alert_streak;
     } else {
-      console.log('Error getting isManager permissions. Token is null.');
+      console.log('Error getting the streak. Token is null.');
       return null;
     }
   }
@@ -124,7 +124,7 @@ export class LoginService {
       const decodedUser: any = jwtDecode(token);
       return decodedUser.longest_streak;
     } else {
-      console.log('Error getting isManager permissions. Token is null.');
+      console.log('Error getting the longest streak. Token is null.');
       return null;
     }
   }
@@ -137,6 +137,26 @@ export class LoginService {
     } else {
       console.log('Error getting user height. Token is null.');
       return null;
+    }
+  }
+
+  changePassword(newPassword: string): Observable<string> {
+    const userId = this.getUserId();
+    if (userId) {
+      const url = `${this.apiUrl}/user/changePassword`;
+      const payload = { userId: userId, password: newPassword };
+      return this.http.put<string>(url, payload).pipe(
+        tap((response) => {
+          console.log('Password updated successfully.', response);
+        }),
+        catchError((error) => {
+          console.error('Error updating password:', error);
+          return throwError(() => error);
+        })
+      );
+    } 
+    else {
+      return throwError(() => new Error('User not logged in.'));
     }
   }
 }
