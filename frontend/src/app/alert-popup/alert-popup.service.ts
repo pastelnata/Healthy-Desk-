@@ -33,7 +33,7 @@ export class AlertPopupService {
   displayAlert(): Promise<boolean> {
     console.log('DISPLAYING ALERT');
     this.showPopUpSubject.next(true);
-    //this.sendAlert1();
+    this.sendAlert1();
     return new Promise((resolve) => {
       this.alertResponse = resolve;
     });
