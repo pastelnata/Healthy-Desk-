@@ -70,7 +70,7 @@ export class AnalyticsService {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     console.log('Getting month analytics for:', year, month);
-  
+    
     return this.http.get<Month>(`${this.apiUrl}/${curUser}/month`, { params: { year, month } })
       .pipe(
         map(response => {
