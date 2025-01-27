@@ -30,20 +30,10 @@ export class AlertPopupService {
     return false;
   }
 
-  userChoice(choice: 'accept' | 'deny'): boolean {
-    if (choice === 'accept') {
-      this.onAccept();
-    } else if (choice === 'deny') {
-      this.onDeny();
-    }
-    this.hideAlert();
-    return false;
-  }
-
   displayAlert(): Promise<boolean> {
-    this.sendAlert1();
     console.log('DISPLAYING ALERT');
     this.showPopUpSubject.next(true);
+    this.sendAlert1();
     return new Promise((resolve) => {
       this.alertResponse = resolve;
     });

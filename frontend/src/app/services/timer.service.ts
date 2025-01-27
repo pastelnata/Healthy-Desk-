@@ -98,14 +98,8 @@ export class TimerService {
   }
 
   async startSittingTimer() {
-    this.alertPopUp.displayAlert();
-    const userAccepted = await this.alertPopUp.displayAlert();
-    if (!userAccepted) {
-      console.log('User denied the alert');
-      return;
-    }
+    this.isStanding = false;
     try {
-      this.isStanding = false;
       console.log('Profile timer sitting:', this.curProfile.timer_sitting);
       const { hours, minutes } = this.homeService.calcHrsMins(
         this.curProfile.timer_sitting ?? ''
@@ -128,7 +122,6 @@ export class TimerService {
         duration: timerSitting,
       });
 
-      this.isStanding = true;
     } catch (error) {
       alert('Error starting sitting timer');
       console.error('Error starting sitting timer:', error);
@@ -136,13 +129,8 @@ export class TimerService {
   }
 
   async startStandingTimer() {
-    const userAccepted = await this.alertPopUp.displayAlert();
-    if (!userAccepted) {
-      console.log('User denied the alert');
-      return;
-    }
+    this.isStanding = true;
     try {
-      this.isStanding = true;
       const { hours, minutes } = this.homeService.calcHrsMins(
         this.curProfile.timer_standing ?? ''
       );
@@ -162,22 +150,32 @@ export class TimerService {
         action: 'startStanding',
         duration: timerStanding,
       });
-
-      // when the timer is complete, update the desk position to sitting
-
-      this.isStanding = false;
     } catch (error) {
       alert('Error starting standing timer');
       console.error('Error starting standing timer:', error);
     }
   }
 
-  timerCompleteHandler(dataType: 'sittingComplete' | 'standingComplete') {
+  async timerCompleteHandler(dataType: 'sittingComplete' | 'standingComplete') {
+    const userAccepted = await this.alertPopUp.displayAlert();
+    if (!userAccepted) {
+      this.alertResponseHandler();
+      return;
+    }
     if (dataType === 'sittingComplete') {
       this.apiDeskService.updateDeskPosition(this.curProfile.deskHeight);
       this.startStandingTimer();
     } else if (dataType === 'standingComplete') {
       this.apiDeskService.updateDeskPosition(this.sittingHeight);
+      this.startSittingTimer();
+    }
+  }
+
+  async alertResponseHandler() {
+    console.log('User denied the alert');
+    if(this.isStanding) {
+      this.startStandingTimer();
+    } else {
       this.startSittingTimer();
     }
   }

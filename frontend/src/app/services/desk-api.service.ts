@@ -68,6 +68,7 @@ export class DeskApiService {
         map((response) => {
           const position = response.position_mm / 10;
           this.positionSubject.next(position);
+          this.getUserPosture(position);
           return position;
         })
       );

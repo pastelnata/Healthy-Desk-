@@ -10,7 +10,7 @@ import { Month } from '../../models/MonthModel';
   styleUrl: './analytics-view.component.css',
 })
 export class AnalyticsViewComponent implements OnInit {
-  curDate!: Date;
+  curDate: Date;
   prevMonthDate!: Date;
   twoMonthsDate!: Date;
   pieChart!: Chart;
@@ -47,6 +47,15 @@ export class AnalyticsViewComponent implements OnInit {
   }
 
   getCurMonths() {
+    const curYear = this.curDate.getFullYear();
+    const curMonth = this.curDate.getMonth();
+
+    // Set prevMonthDate to the first day of the previous month
+    this.prevMonthDate = new Date(curYear, curMonth - 1, 1);
+
+    // Set twoMonthsDate to the first day of two months ago
+    this.twoMonthsDate = new Date(curYear, curMonth - 2, 1);
+    
     // handles the case where the current month is January or February
     if (this.curDate.getMonth() === 0) {
       this.prevMonthDate.setFullYear(this.curDate.getFullYear() - 1);
@@ -173,6 +182,18 @@ export class AnalyticsViewComponent implements OnInit {
     }
 
     await this.analyticsService.getMonthAnalytics(this.curDate).subscribe({
+      next: (response) => {
+        this.monthAnalytics.push(response);
+      },
+    });
+  
+    await this.analyticsService.getMonthAnalytics(this.prevMonthDate).subscribe({
+      next: (response) => {
+        this.monthAnalytics.push(response);
+      },
+    });
+  
+    await this.analyticsService.getMonthAnalytics(this.twoMonthsDate).subscribe({
       next: (response) => {
         this.monthAnalytics.push(response);
       },

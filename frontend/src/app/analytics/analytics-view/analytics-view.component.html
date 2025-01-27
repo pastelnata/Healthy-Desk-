@@ -12,8 +12,8 @@
                             <div id="title">
                               <h6>{{ monthNames[(curDate.getMonth() - i + 12) % 12] }}</h6>
                             </div>
-                            <p>Average standing hours/day: {{ analytics.avgStandingHrs.toFixed(2) }}</p>
-                            <p>Times Moved: {{ analytics.totalTimesMoved }}</p>
+                            <p>Average standing hours/day: {{ (analytics.avgStandingHrs || 0).toFixed(2) }}</p>
+                            <p>Times Moved: {{ analytics.totalTimesMoved || 0 }}</p>
                         </div>
                 </div>
             </div>
